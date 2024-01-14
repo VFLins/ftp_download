@@ -4,6 +4,8 @@ import ftplib
 from collectutils.prefs import Conf
 from pathlib import PureWindowsPath
 
+# IMPORTANT: https://kb.globalscape.com/KnowledgebaseArticle10142.aspx
+
 def normal_path(
         path:       str, 
         as_posix:   bool=True
@@ -72,7 +74,11 @@ def change_remote_wd(
                 print(
                     f"Server respnded: {reply}",
                     "Waiting...", sep="\n")
+            # TODO: include wait behaviour
 
+        # TODO: support other possible exceptions:
+        #        ftplib.error_temp, ftplib.error_perm, ftplib.error_proto, OSError and EOFError
+                
         except Exception:
             print("Unexpected error:\n", Exception)
 
