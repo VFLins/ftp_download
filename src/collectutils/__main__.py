@@ -2,7 +2,7 @@ import os
 import re
 import asyncio
 import ftplib
-from ensure import *
+import ensure
 from prefs import Conf
 from typing import Optional, Sequence
 from shutil import unpack_archive

@@ -1,7 +1,7 @@
 import os
-import ftplib
-from python_scripts.collectutils.prefs import Conf
 import re
+import ftplib
+from collectutils.prefs import Conf
 from pathlib import PureWindowsPath
 
 def normal_path(
