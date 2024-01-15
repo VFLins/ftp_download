@@ -14,6 +14,8 @@ def normal_path(
     """
     Normalizes a path received.
 
+    Should be used with `as_posix=True` (default) to normalize paths compatible usual FTP file systems (unix-like). Otherwise the pathname will be compatible with current running OS.
+
     Args:
 
     - path (`str`): The path to be normalized;
@@ -25,7 +27,7 @@ def normal_path(
 
     """
 
-    is_windows = os.path.sep == "\\"
+    is_windows = (os.path.sep == "\\")
     
     if is_windows and as_posix:
         posix_path = PureWindowsPath(path).as_posix()
