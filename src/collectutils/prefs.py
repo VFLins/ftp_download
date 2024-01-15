@@ -1,11 +1,13 @@
-class global_config_defaults():
-    def __init__(self):
-        self.verbose = False
-        """Should event messages be printed do `stdout`?"""
-        self.timeout = 10
-        """Time to wait for request responses in seconds"""
-        self.retry   = 5
-        """Maximum amount of attempts for every request"""
+from dataclasses import dataclass
 
-Conf = global_config_defaults()
+@dataclass
+class GlobalConfigDefaults:
+    verbose: bool=False
+    """Should event messages be printed do `stdout`?"""
+    timeout: int=10
+    """Time to wait for request responses in seconds"""
+    retry: int=5
+    """Maximum amount of attempts for every request"""
+
+Conf = GlobalConfigDefaults()
 """Stores global configuration parameters, change it's parameter values to set your preferences"""
