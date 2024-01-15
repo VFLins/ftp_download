@@ -1,10 +1,9 @@
 import os
 import re
 import ftplib
+import handle_error
 from collectutils.prefs import Conf
 from pathlib import PureWindowsPath
-
-# IMPORTANT: https://kb.globalscape.com/KnowledgebaseArticle10142.aspx
 
 def normal_path(
         path:       str, 
@@ -18,12 +17,12 @@ def normal_path(
 
     Args:
 
-    - path (`str`): The path to be normalized;
-    - as_posix (`bool`): If `True`, output will be in posix style, otherwise returns in current OS style (might still be posix). Defaults to `True`.
+    - path (`str`): The path to be normalized
+    - as_posix (`bool`): If `True`, output will be in posix style, otherwise returns in current OS style (might still be posix). Defaults to `True`
 
     Returns:
 
-    A string with path normalized
+    A string with path normalized.
 
     """
 
@@ -47,8 +46,8 @@ def change_remote_wd(
 
     Args:
 
-    - ftp (`ftplib.FPT`): An instance of the FTP class, expects to be already connected;
-    - path (`str`): FULL remote path targeted;
+    - ftp (`ftplib.FPT`): An instance of the FTP class, expects to be already connected
+    - path (`str`): FULL remote path targeted
 
     Returns:
 
@@ -71,15 +70,8 @@ def change_remote_wd(
                     sep="\n")
             break
 
-        except ftplib.error_reply as reply:
-            if Conf.verbose:
-                print(
-                    f"Server respnded: {reply}",
-                    "Waiting...", sep="\n")
-            # TODO: include wait behaviour
-
-        # TODO: support other possible exceptions:
-        #        ftplib.error_temp, ftplib.error_perm, ftplib.error_proto, OSError and EOFError
+        except ftplib.all_errors as reply:
+            handle_error.all(ftp, reply)
                 
         except Exception:
             print("Unexpected error:\n", Exception)
@@ -87,3 +79,4 @@ def change_remote_wd(
     current_path = normal_path(ftp.pwd())
 
     return current_path == path
+
