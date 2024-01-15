@@ -51,7 +51,7 @@ async def download_from_folder(
         ):
 
     """
-    Download multiple files from a path on a FTP Server.
+    Download multiple files from a folder on a FTP Server.
 
     Args:
 
@@ -62,46 +62,34 @@ async def download_from_folder(
     - stops_with (`int` or `None`): If not `None`, defines the maximum amount of files to be downloaded, otherwise download every file in `remote_path`. Defaults to `None`.
     """
 
+    remote_path = ensure.normal_path(remote_path)
+    local_path = ensure.normal_path(local_path, as_posix=False)
+
     if not os.path.exists(local_path):
         os.makedirs(local_path)
 
-    retry = 5
-    while retry > 0:
-        try:
-
-            if Conf.verbose:
-                print(f"connecting to {remote_path}")
-
-            ftp.cwd(remote_path)
-            filenames = ftp.nlst()
-            break
-
-        except TimeoutError:
-            retry = retry - 1
-
-        except Exception:
-            print("Unexpected error:\n", Exception)
-
-    if retry == 0:
-        raise ConnectionError("Maximum number of retries reached, check your network, or the `remote_path` provided.\nNo files downloaded")
+    cwd_success = ensure.change_remote_wd(ftp, remote_path)
 
     semaphore = asyncio.Semaphore(max_concurrent_jobs)
+    
     tasks = []
+    filenames = ftp.nlst() # TODO: Check filenames and return only files
 
-    for idx, filename in enumerate(filenames):
-        remote_filename = os.path.join(local_path, filename)
+    if cwd_success:
+        for idx, filename in enumerate(filenames):
+            remote_filename = os.path.join(local_path, filename)
 
-        if Conf.verbose:
-            print(f"Processing {idx} files", end="\r")
+            if Conf.verbose:
+                print(f"Processing {idx} files", end="\r")
 
-        if stops_with and stops_with==idx:
-            break
+            if stops_with and stops_with==idx:
+                break
 
-        task = asyncio.create_task(
-            download_file(ftp, remote_filename, semaphore)
-        )
-        tasks.append(task)
-        
+            task = asyncio.create_task(
+                download_file(ftp, remote_filename, semaphore)
+            )
+            tasks.append(task)
+            
     await asyncio.gather(*tasks)
 
     if Conf.verbose:
