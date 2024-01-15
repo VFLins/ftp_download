@@ -1,2 +1,4 @@
 # ftp_download
- Utilities to files from ftp servers
+Utilities to download files from ftp servers with minimum dependencies.
+
+Documentation currently in the code.
