@@ -1,5 +1,5 @@
 import pytest
-from collectutils.ensure import normal_path
+from ftp_download.ensure import normal_path
 
 @pytest.mark.parametrize(
     "inp,out,as_posix", [
