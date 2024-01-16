@@ -1,7 +1,7 @@
 import ftplib
 import asyncio
 import timings
-from prefs import Conf
+from config.prefs import Conf
 from typing import Union
 
 # IMPORTANT: https://docs.python.org/3/library/ftplib.html#ftplib.all_errors
