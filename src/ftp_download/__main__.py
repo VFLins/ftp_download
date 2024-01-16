@@ -2,8 +2,8 @@ import os
 import re
 import asyncio
 import ftplib
-import ensure
-from prefs import Conf
+from . import ensure 
+from config.prefs import Conf
 from typing import Optional, Sequence
 from shutil import unpack_archive
 
@@ -95,6 +95,8 @@ async def download_from_folder(
     if Conf.verbose:
         print("Completed!")
 
+
+# TODO: Remove this soon
 def extract_and_organize(
         path:           str, 
         files_prefixes: Sequence[str]=["cons", "det"]
