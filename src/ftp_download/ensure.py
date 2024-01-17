@@ -1,6 +1,7 @@
 import os
 import re
 import ftplib
+from typing import List
 from config.prefs import Conf
 from pathlib import PureWindowsPath
 
@@ -87,3 +88,7 @@ def change_remote_wd(
     current_path = normal_path(ftp.pwd())
 
     return current_path == path
+
+def get_filenames(ftp: ftplib.FTP) -> List[str]:
+    listing = ftp.nlst()
+    match_filename = re.compile(r"[^\\]*\.(\w+)$")
