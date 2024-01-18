@@ -91,7 +91,7 @@ def change_remote_wd(
 
     return current_path == path
 
-def describe_dir(ftp: ftplib.FTP, path: str) -> Dict[str, List[str]]:
+def describe_dir(ftp: ftplib.FTP, path: str='') -> Dict[str, List[str]]:
 
     # Capturing stdout adapted from:
     # https://stackoverflow.com/questions/5136611/capture-stdout-from-a-script
@@ -100,9 +100,25 @@ def describe_dir(ftp: ftplib.FTP, path: str) -> Dict[str, List[str]]:
     capturer = StringIO()
     sys.stdout = capturer
 
-    ftp.dir(*path.split("/"))
+    ftp.dir(normal_path(path))
 
     sys.stdout = curr_stdout
-    return capturer.getvalue().split("\n")[:-1]
+    # Capture stdout as a list
+    # Last item is always an empty line
+    lines_list = capturer.getvalue().split("\n")[:-1]
+
+    # Will get wrong result if filename or dirname has space " "
+    paths = {}
+    paths["dirs"] = [i.rpartition(" ")[-1] for i in lines_list if i[0]=="d"]
+    paths["files"] = [i.rpartition(" ")[-1] for i in lines_list if i[0]!="d"]
+
+    if len(paths["dirs"]) + len(paths["files"]) == 0:
+        error_msg = "Invalid path provided."
+        if Conf.raise_if_invalid:
+            raise ftplib.error_perm(error_msg)
+        else:
+            print(error_msg)
+            
+    return paths
 
 

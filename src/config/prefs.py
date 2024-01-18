@@ -8,6 +8,8 @@ class GlobalConfigDefaults:
     """Time to wait for request responses in seconds"""
     retry: int=5
     """Maximum amount of attempts for every request"""
+    raise_if_invalid: bool=True
+    """Raise error if invalid path provided, just print a message if `False`"""
 
 Conf = GlobalConfigDefaults()
 """Stores global configuration parameters, change it's parameter values to set your preferences"""
