@@ -1,7 +1,9 @@
 import os
 import re
+import sys
+from io import StringIO
 import ftplib
-from typing import List
+from typing import Dict, List
 from config.prefs import Conf
 from pathlib import PureWindowsPath
 
@@ -89,8 +91,18 @@ def change_remote_wd(
 
     return current_path == path
 
-def valid_file(ftp: ftplib.FTP, path: str) -> List[str]:
+def describe_dir(ftp: ftplib.FTP, path: str) -> Dict[str, List[str]]:
 
-    path, tail = os.path.split(path)
-    listing = ftp.nlst()
-    match_filename = re.compile(r"[^\\]*\.(\w+)$")
+    # Capturing stdout adapted from:
+    # https://stackoverflow.com/questions/5136611/capture-stdout-from-a-script
+
+    curr_stdout = sys.stdout
+    capturer = StringIO()
+    sys.stdout = capturer
+
+    ftp.dir(*path.split("/"))
+
+    sys.stdout = curr_stdout
+    return capturer.getvalue().split("\n")[:-1]
+
+
