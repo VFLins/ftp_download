@@ -89,6 +89,8 @@ def change_remote_wd(
 
     return current_path == path
 
-def get_filenames(ftp: ftplib.FTP) -> List[str]:
+def valid_file(ftp: ftplib.FTP, path: str) -> List[str]:
+
+    path, tail = os.path.split(path)
     listing = ftp.nlst()
     match_filename = re.compile(r"[^\\]*\.(\w+)$")

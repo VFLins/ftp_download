@@ -8,8 +8,9 @@ from typing import Optional, Sequence
 from shutil import unpack_archive
 
 async def download_file(
-        ftp:                ftplib.FTP, 
-        local_file_path:    str, 
+        ftp:                ftplib.FTP,
+        remote_file_path:   str,
+        local_path:         str, 
         semaphore:          asyncio.Semaphore, 
         ):
      
@@ -24,23 +25,28 @@ async def download_file(
     - local_file_path (`str`):  Full path of where the file will be downloaded;
     - semaphore (`asyncio.Semaphore`): A semaphore to limit the number of concurrent downloads;
     """
+    
+    remote_path, filename = os.path.split(remote_file_path)
 
+    if not os.path.exists(local_path):
+        os.makedirs(local_path)
+    
+    # Create a local file with the same name inside `local_path`
+    local_file_path = os.path.join(local_path, filename)
     async with semaphore:
-
         with open(local_file_path, "wb") as local_file:
-            # get "filename.foo" here
-            filename = os.path.basename(local_file_path)
 
             try:
                 if Conf.verbose:
-                    print(f"retrieving {filename}...")
+                    print(f"Retrieving {filename}...")
 
-                ftp.retrbinary(f"RETR {filename}", local_file.write)
+                ftp.retrbinary(f"RETR {remote_file_path}", local_file.write)
+                
+                if Conf.verbose:
+                    print(f"File saved: {local_file_path}")
 
             except Exception as UnexpectedError:
-                print(f"Error downloading {filename}")
-                if Conf.verbose:
-                    print(UnexpectedError)
+                print(f"Error downloading {filename}:\n{UnexpectedError}")
 
 async def download_from_folder(
         ftp:                    ftplib.FTP, 

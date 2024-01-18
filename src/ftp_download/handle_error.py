@@ -1,6 +1,6 @@
 import ftplib
 import asyncio
-import timings
+from . import timings
 from config.prefs import Conf
 from typing import Union
 
