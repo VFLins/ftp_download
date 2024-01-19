@@ -1,6 +1,6 @@
 import asyncio
 import ftplib
-from config.prefs import Conf
+from ftp_download.prefs import Conf
 
 async def not_resetable():
     asyncio.sleep(Conf.no_reset_timeout)

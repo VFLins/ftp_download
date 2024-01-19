@@ -2,7 +2,7 @@ import ftplib
 import asyncio
 from . import timings
 from dataclasses import dataclass
-from config.prefs import Conf
+from ftp_download.prefs import Conf
 from typing import Union
 
 # IMPORTANT: https://docs.python.org/3/library/ftplib.html#ftplib.all_errors

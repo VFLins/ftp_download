@@ -4,7 +4,7 @@ import sys
 from io import StringIO
 import ftplib
 from typing import Dict, List
-from config.prefs import Conf
+from .prefs import Conf
 from pathlib import PureWindowsPath
 
 # IMPORTANT: https://kb.globalscape.com/KnowledgebaseArticle10142.aspx
@@ -34,8 +34,8 @@ def normal_path(
     
     if is_windows and as_posix:
         posix_path = PureWindowsPath(path).as_posix()
-        swap_driver_for_root = re.compile("[A-Z]:/", re.IGNORECASE)
-        return swap_driver_for_root.sub("/", posix_path)
+        swap_drive_letter_for_root = re.compile("[A-Z]:/", re.IGNORECASE)
+        return swap_drive_letter_for_root.sub("/", posix_path)
     
     else:
         return os.path.normpath(path)

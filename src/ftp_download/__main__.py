@@ -3,15 +3,15 @@ import re
 import asyncio
 import ftplib
 from . import ensure 
-from config.prefs import Conf
+from . import timings
+from .prefs import Conf
 from typing import Optional, Sequence
 from shutil import unpack_archive
 
-async def download_file(
+def download_file(
         ftp:                ftplib.FTP,
         remote_file_path:   str,
-        local_path:         str, 
-        semaphore:          asyncio.Semaphore, 
+        local_path:         str
         ):
      
     """
@@ -25,34 +25,19 @@ async def download_file(
     - local_file_path (`str`):  Full path of where the file will be downloaded;
     - semaphore (`asyncio.Semaphore`): A semaphore to limit the number of concurrent downloads;
     """
-    
-    remote_path, filename = os.path.split(remote_file_path)
 
     if not os.path.exists(local_path):
         os.makedirs(local_path)
-    
-    # Create a local file with the same name inside `local_path`
-    local_file_path = os.path.join(local_path, filename)
-    async with semaphore:
-        with open(local_file_path, "wb") as local_file:
 
-            try:
-                if Conf.verbose:
-                    print(f"Retrieving {filename}...")
-
-                ftp.retrbinary(f"RETR {remote_file_path}", local_file.write)
-                
-                if Conf.verbose:
-                    print(f"File saved: {local_file_path}")
-
-            except Exception as UnexpectedError:
-                print(f"Error downloading {filename}:\n{UnexpectedError}")
+    loop = asyncio.get_event_loop()
+    loop.create_task(
+        timings.download_task(ftp, remote_file_path, local_path)
+    )
 
 async def download_from_folder(
         ftp:                    ftplib.FTP, 
         remote_path:            str, 
-        local_path:             str, 
-        max_concurrent_jobs:    int=20, 
+        local_path:             str,  
         stops_with:             Optional[int]=None
         ):
 
@@ -74,27 +59,24 @@ async def download_from_folder(
     if not os.path.exists(local_path):
         os.makedirs(local_path)
 
-    cwd_success = ensure.change_remote_wd(ftp, remote_path)
-
-    semaphore = asyncio.Semaphore(max_concurrent_jobs)
+    # cwd_success = ensure.change_remote_wd(ftp, remote_path)
+    # semaphore = asyncio.Semaphore(Conf.max_concurrent_jobs)
     
+    filenames = ensure.describe_dir(ftp, remote_path)["files"]
     tasks = []
-    filenames = ftp.nlst() # TODO: Check filenames and return only files
+    for idx, filename in enumerate(filenames):
 
-    if cwd_success:
-        for idx, filename in enumerate(filenames):
-            remote_filename = os.path.join(local_path, filename)
+        if Conf.verbose:
+            print(f"Processing {idx} files...", end="\r")
 
-            if Conf.verbose:
-                print(f"Processing {idx} files", end="\r")
+        if type(stops_with) == type(1) and stops_with == idx:
+            break
 
-            if stops_with and stops_with==idx:
-                break
-
-            task = asyncio.create_task(
-                download_file(ftp, remote_filename, semaphore)
-            )
-            tasks.append(task)
+        remote_file_path = os.path.join(remote_path, filename)
+        task = asyncio.create_task(
+            download_file(ftp, remote_file_path, local_path)
+        )
+        tasks.append(task)
             
     await asyncio.gather(*tasks)
 

@@ -1,7 +1,7 @@
 import ftplib
 import asyncio
 from . import timings
-from config.prefs import Conf
+from .prefs import Conf
 from typing import Union
 
 # IMPORTANT: https://docs.python.org/3/library/ftplib.html#ftplib.all_errors
@@ -37,10 +37,10 @@ async def reply(
     """
     
     while True:
-        if timings.event_loop_available():
-            await timings.not_resetable()
+        if async.event_loop_available():
+            await async.not_resetable()
         else:
-            asyncio.run(timings.not_resetable())
+            asyncio.run(async.not_resetable())
 
         
 
