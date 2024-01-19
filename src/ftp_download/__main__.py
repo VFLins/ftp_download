@@ -1,10 +1,11 @@
+from . import ensure 
+from . import timings
+from .prefs import Conf
+
 import os
 import re
 import asyncio
 import ftplib
-from . import ensure 
-from . import timings
-from .prefs import Conf
 from typing import Optional, Sequence
 from shutil import unpack_archive
 
@@ -12,27 +13,35 @@ def download_file(
         ftp:                ftplib.FTP,
         remote_file_path:   str,
         local_path:         str
-        ):
+        ) -> None:
      
     """
-    Creates a task to download a single file from a FTP server. Looks for a "filename.foo" in `local_file_path` and downloads that file from current directory in `ftp`.
+    Download a single file from a FTP server. Uses full path to file on the server, and full path to the download directory.
 
-    It is intended to be called by `download_from_folder()`.
+    Can use relative path to the file on the server, if `ftp.cwd('/path/to/folder/')` was called before.
     
     Args:
 
-    - ftp (`ftplib.FTP`): Should be already placed on desired remote path with files to be downloaded, using `ftplib.FTP.cwd("/the/remote/path")`;
-    - local_file_path (`str`):  Full path of where the file will be downloaded;
-    - semaphore (`asyncio.Semaphore`): A semaphore to limit the number of concurrent downloads;
+    - ftp (`ftplib.FTP`): A `ftplib.FTP` object, expects to be already connected and logged in
+    - remote_file_path (`str`):  Full path including filename of the file that will be downloaded
+    - local_path (`str`): Full path to local directory where the file will be downloaded, will try to create folder if doesn't exists. Be careful with typos.
     """
 
     if not os.path.exists(local_path):
         os.makedirs(local_path)
 
-    loop = asyncio.get_event_loop()
-    loop.create_task(
-        timings.download_task(ftp, remote_file_path, local_path)
-    )
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+
+    try:
+        loop.run_until_complete(
+            timings.download_task(ftp, remote_file_path, local_path)
+        )
+    except Exception as xpt:
+        print(f"Unexpected error downloading the file:\n{xpt}")
+    loop.close()
 
 async def download_from_folder(
         ftp:                    ftplib.FTP, 
