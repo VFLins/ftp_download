@@ -43,7 +43,9 @@ async def reply(
             asyncio.run(async.not_resetable())
 
         
-
+def reset_connection(ftp :ftplib.FTP):
+    ftp.close()
+    ftp.connect()
 
 def error_code(ftp):
     msg = ftp.getmultiline()

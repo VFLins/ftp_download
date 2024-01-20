@@ -9,7 +9,7 @@ import ftplib
 from typing import Optional, Sequence
 from shutil import unpack_archive
 
-def download_file(
+def file(
         ftp:                ftplib.FTP,
         remote_file_path:   str,
         local_path:         str
@@ -43,7 +43,7 @@ def download_file(
         print(f"Unexpected error downloading the file:\n{xpt}")
     loop.close()
 
-async def download_from_folder(
+async def from_folder(
         ftp:                    ftplib.FTP, 
         remote_path:            str, 
         local_path:             str,  
@@ -83,7 +83,7 @@ async def download_from_folder(
 
         remote_file_path = os.path.join(remote_path, filename)
         task = asyncio.create_task(
-            download_file(ftp, remote_file_path, local_path)
+            timings.download_task(ftp, remote_file_path, local_path)
         )
         tasks.append(task)
             
