@@ -121,4 +121,14 @@ def describe_dir(ftp: ftplib.FTP, path: str='') -> Dict[str, List[str]]:
             
     return paths
 
+def login(ftp: ftplib.FTP):
+    try:
+        ftp.login()
+    except ftplib.error_perm as perm_err:
+        resp = perm_err.__str__()
+        
+        if resp[:3] == "530":
+            pass
+        else:
+            raise ftplib.error_perm(resp)
 
