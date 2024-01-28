@@ -6,7 +6,7 @@ from .prefs import Conf
 # Create a local file with the same name inside `local_path`
 async def download_task(ftp, remote_file_path, local_path):
     remote_path, filename = os.path.split(remote_file_path)
-    local_file_path = os.paht.join(local_path, filename)
+    local_file_path = os.path.join(local_path, filename)
     async with Conf.semaphore:
         with open(local_file_path, "wb") as local_file:
 
