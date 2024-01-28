@@ -27,6 +27,8 @@ def file(
     - local_path (`str`): Full path to local directory where the file will be downloaded, will try to create folder if doesn't exists. Be careful with typos.
     """
 
+    ensure.login(ftp=ftp)
+    
     if not os.path.exists(local_path):
         os.makedirs(local_path)
 
@@ -61,6 +63,8 @@ async def from_folder(
     - max_concurrent_jobs (`int`): Maximum number of concurrent downloads. Defaults to 20;
     - stops_with (`int` or `None`): If not `None`, defines the maximum amount of files to be downloaded, otherwise download every file in `remote_path`. Defaults to `None`.
     """
+
+    ensure.login(ftp=ftp)
 
     remote_path = ensure.normal_path(remote_path)
     local_path = ensure.normal_path(local_path, as_posix=False)
