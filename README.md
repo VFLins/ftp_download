@@ -33,6 +33,26 @@ lp = "/my_download_folder/"
 ftp_download.file(ftp=ftp, remote_file_path=rfp, local_path=lp)
 ```
 
+Reproducible example below:
+
+```
+import ftp_download
+from ftplib import FTP
+import os
+
+# downloading /pub/R/CRANlogo.png 
+# from cran.r-project.org
+
+ftp = FTP("cran.r-project.org")
+
+if os.name == "nt":
+    lp = "C:/"
+else:
+    lp = "~/"
+
+ftp_download.file(ftp, "/pub/R/CRANlogo.png", local_path=lp)
+```
+
 ## Download files from a folder
 
 
