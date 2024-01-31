@@ -3,8 +3,10 @@ import ftplib
 import os
 from .prefs import Conf
 
+from typing import Callable, Awaitable, List
+
 # Create a local file with the same name inside `local_path`
-async def download_task(ftp, remote_file_path, local_path):
+async def download_task(ftp, remote_file_path, local_path) -> None:
     remote_path, filename = os.path.split(remote_file_path)
     local_file_path = os.path.join(local_path, filename)
     async with Conf.semaphore:
@@ -21,6 +23,9 @@ async def download_task(ftp, remote_file_path, local_path):
 
             except Exception as UnexpectedError:
                 print(f"Error downloading {filename}:\n{UnexpectedError}")
+
+async def download_multiple(download_tasks: List[Callable[[Awaitable], None]]) -> None:
+    asyncio.gather(*download_task)
 
 async def not_resetable():
     asyncio.sleep(Conf.no_reset_timeout)

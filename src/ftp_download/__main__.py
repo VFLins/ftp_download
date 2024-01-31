@@ -5,7 +5,7 @@ from .prefs import Conf
 import os
 import re
 import asyncio
-import ftplib
+import ftplib # https://github.com/python/cpython/blob/3.12/Lib/ftplib.py
 from typing import Optional, Sequence
 from shutil import unpack_archive
 
@@ -45,7 +45,7 @@ def file(
         print(f"Unexpected error downloading the file:\n{xpt}")
     loop.close()
 
-async def from_folder(
+def from_folder(
         ftp:                    ftplib.FTP, 
         remote_path:            str, 
         local_path:             str,  
@@ -71,18 +71,21 @@ async def from_folder(
 
     if not os.path.exists(local_path):
         os.makedirs(local_path)
-
-    # cwd_success = ensure.change_remote_wd(ftp, remote_path)
-    # semaphore = asyncio.Semaphore(Conf.max_concurrent_jobs)
     
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+
+
     filenames = ensure.describe_dir(ftp, remote_path)["files"]
     tasks = []
     for idx, filename in enumerate(filenames):
 
         if Conf.verbose:
-            print(f"Processing {idx} files...", end="\r")
+            print(f"Processing {idx}/{len(filenames)} files...", end="\r")
 
-        if type(stops_with) == type(1) and stops_with == idx:
+        if (type(stops_with) == type(1)) and (stops_with == idx):
             break
 
         remote_file_path = os.path.join(remote_path, filename)
@@ -90,8 +93,8 @@ async def from_folder(
             timings.download_task(ftp, remote_file_path, local_path)
         )
         tasks.append(task)
-            
-    await asyncio.gather(*tasks)
+
+        loop.run_until_complete(timings.download_multiple(tasks))
 
     if Conf.verbose:
         print("Completed!")

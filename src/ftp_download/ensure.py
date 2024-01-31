@@ -127,8 +127,6 @@ def login(ftp: ftplib.FTP):
     except ftplib.error_perm as perm_err:
         resp = perm_err.__str__()
         
-        if resp[:3] == "530":
-            pass
-        else:
+        if resp[:3] != "530":
             raise ftplib.error_perm(resp)
 
