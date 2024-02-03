@@ -25,7 +25,7 @@ async def download_task(ftp, remote_file_path, local_path) -> None:
                 print(f"Error downloading {filename}:\n{UnexpectedError}")
 
 async def download_multiple(download_tasks: List[Callable[[Awaitable], None]]) -> None:
-    asyncio.gather(*download_task)
+    await asyncio.gather(*download_tasks)
 
 async def not_resetable():
     asyncio.sleep(Conf.no_reset_timeout)
