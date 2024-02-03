@@ -18,14 +18,15 @@ class GlobalConfigDefaults():
         self.raise_if_invalid: bool = True
         """Raise error if invalid path provided, will only print a message if `False`"""
 
-        self.download_folder :str = self.set_default_download_folder()
+        self.set_default_download_folder()
+        """Set default download folder to `~/Downloads` (posix) or equivalent depending on the OS."""
     
     def __repr__(self):
         return (
             "[Current ftp_download settings]\n" +
             f"verbose = {self.verbose}\n" +
-            f"timeout = {self.timeout}\n" +
-            f"retry = {self.retry}\n" +
+            f"timeout = {self.timeout} seconds\n" +
+            f"retry = {self.retry} times\n" +
             f"max_concurrent_jobs = {self.semaphore._value}\n" +
             f"download_folder = {self.download_folder}"
         )
@@ -41,5 +42,5 @@ class GlobalConfigDefaults():
     def set_max_concurrent_jobs(self, amount) -> asyncio.Semaphore:
         setattr(self, "semaphore", asyncio.Semaphore(amount))
 
-Configs = GlobalConfigDefaults()
+Conf = GlobalConfigDefaults()
 """Stores global configuration parameters, change it's parameter values to set your preferences"""
