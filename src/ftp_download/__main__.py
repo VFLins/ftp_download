@@ -12,7 +12,7 @@ from shutil import unpack_archive
 def file(
         ftp:                ftplib.FTP,
         remote_file_path:   str,
-        local_path:         str
+        local_path:         str=ensure.normal_path(Conf.download_folder, as_posix=False)
         ) -> None:
      
     """
@@ -48,7 +48,7 @@ def file(
 def from_folder(
         ftp:                    ftplib.FTP, 
         remote_path:            str, 
-        local_path:             str,  
+        local_path:             str=ensure.normal_path(Conf.download_folder, as_posix=False),  
         stops_with:             Optional[int]=None
         ):
 
@@ -77,7 +77,6 @@ def from_folder(
     except RuntimeError:
         loop = asyncio.new_event_loop()
 
-
     filenames = ensure.describe_dir(ftp, remote_path)["files"]
     tasks = []
     for idx, filename in enumerate(filenames):
@@ -88,13 +87,12 @@ def from_folder(
         if (type(stops_with) == type(1)) and (stops_with == idx):
             break
 
-        remote_file_path = os.path.join(remote_path, filename)
-        task = asyncio.create_task(
-            timings.download_task(ftp, remote_file_path, local_path)
-        )
+        remote_file_path = ensure.normal_path(os.path.join(remote_path, filename))
+
+        task = timings.download_task(ftp, remote_file_path, local_path)
         tasks.append(task)
 
-        loop.run_until_complete(timings.download_multiple(tasks))
+    loop.run_until_complete(timings.download_multiple(tasks))
 
     if Conf.verbose:
         print("Completed!")
