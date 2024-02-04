@@ -3,11 +3,9 @@ from . import timings
 from .prefs import Conf
 
 import os
-import re
 import asyncio
 import ftplib  # https://github.com/python/cpython/blob/3.12/Lib/ftplib.py
-from typing import Optional, Sequence
-from shutil import unpack_archive
+from typing import Optional
 
 
 def file(

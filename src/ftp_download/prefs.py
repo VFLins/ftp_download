@@ -1,6 +1,7 @@
 import asyncio
 from os.path import join, expanduser
 
+
 class GlobalConfigDefaults():
     def __init__(self):
         self.verbose: bool = False
@@ -13,13 +14,15 @@ class GlobalConfigDefaults():
         """Maximum amount of attempts for every request"""
 
         self.raise_if_invalid: bool = True
-        """Shoud stop if an error is encountered? If `False` it will just print a message"""
+        """Shoud stop if an error is encountered? If `False` it will just print a message""" # noqa
 
-        self.download_folder: str = join(expanduser("~"), "Downloads", "ftp_download")
+        self.download_folder: str = join(
+            expanduser("~"), "Downloads", "ftp_download"
+        )
         """Standard destination path for all downloads"""
 
         self.set_max_concurrent_jobs()
-    
+
     def __repr__(self):
         return (
             "[Current ftp_download settings]\n" +
@@ -47,4 +50,4 @@ class GlobalConfigDefaults():
 
 
 Conf = GlobalConfigDefaults()
-"""Stores global configuration parameters, change it's parameter values to set your preferences"""
+"""Stores global configuration parameters, change it's parameter values to set your preferences""" # noqa

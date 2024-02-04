@@ -39,7 +39,7 @@ def describe_dir(
         ftp: ftplib.FTP,
         path: str = ''
         ) -> Dict[str, List[str]]:
-    
+
     """
     Describes the remote path showing names of files and folders in the specified directory.
 
@@ -51,7 +51,7 @@ def describe_dir(
     ### Returns:
 
     A `dict` with two keys `"dirs"` and `"files"`. The first stores a `list` of dirnames in the specified directory, and the latter stores a `list` of filenames.
-    """
+    """ # noqa
 
     # Capturing stdout adapted from:
     # https://stackoverflow.com/questions/5136611/capture-stdout-from-a-script
@@ -83,14 +83,14 @@ def describe_dir(
 
 
 def login(ftp: ftplib.FTP) -> None:
-    
+
     """
     Logs in to the specified `ftplib.FTP` object's server and skips any login error.
 
     ### Args:
 
     - **ftp** (`ftplib.FTP`): A connected `ftplib.FTP` object
-    """
+    """ # noqa
 
     try:
         ftp.login()
