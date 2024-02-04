@@ -4,6 +4,7 @@ from ftp_download import (
     from_folder
 )
 
+
 @pytest.mark.xfail(reason="Might fail due to network issues")
 def test_file():
     pass
