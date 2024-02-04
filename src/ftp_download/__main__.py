@@ -12,7 +12,7 @@ from shutil import unpack_archive
 def file(
         ftp:                ftplib.FTP,
         remote_file_path:   str,
-        local_path:         str=ensure.normal_path(Conf.download_folder, as_posix=False)
+        local_path:         str=Conf.download_folder
         ) -> None:
      
     """
@@ -48,7 +48,7 @@ def file(
 def from_folder(
         ftp:                    ftplib.FTP, 
         remote_path:            str, 
-        local_path:             str=ensure.normal_path(Conf.download_folder, as_posix=False),  
+        local_path:             str=Conf.download_folder,  
         stops_with:             Optional[int]=None
         ):
 
@@ -66,8 +66,8 @@ def from_folder(
 
     ensure.login(ftp=ftp)
 
-    remote_path = ensure.normal_path(remote_path)
-    local_path = ensure.normal_path(local_path, as_posix=False)
+    remote_path = ensure.posix_path(remote_path)
+    local_path = os.path.normpath(local_path)
 
     if not os.path.exists(local_path):
         os.makedirs(local_path)
@@ -87,7 +87,7 @@ def from_folder(
         if (type(stops_with) == type(1)) and (stops_with == idx):
             break
 
-        remote_file_path = ensure.normal_path(os.path.join(remote_path, filename))
+        remote_file_path = ensure.posix_path(os.path.join(remote_path, filename))
 
         task = timings.download_task(ftp, remote_file_path, local_path)
         tasks.append(task)

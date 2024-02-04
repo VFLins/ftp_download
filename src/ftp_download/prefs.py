@@ -12,14 +12,11 @@ class GlobalConfigDefaults():
         self.retry: int = 5
         """Maximum amount of attempts for every request"""
 
-        self.set_max_concurrent_jobs(20)
-        """`asyncio.Semaphore` object that defines the maximum amount of simultaneous downloads, defaults to 20"""
-
         self.raise_if_invalid: bool = True
         """Raise error if invalid path provided, will only print a message if `False`"""
 
+        self.set_max_concurrent_jobs()
         self.set_default_download_folder()
-        """Set default download folder to `~/Downloads` (posix) or equivalent depending on the OS."""
     
     def __repr__(self):
         return (
@@ -31,15 +28,40 @@ class GlobalConfigDefaults():
             f"download_folder = {self.download_folder}"
         )
     
-    def set_default_download_folder(self, path: str | None=None) -> str:
-        """"""
+    def set_default_download_folder(self, path: str | None=None) -> None:
+        """Defines a standard destination path for all downloads.
+        
+        Args:
+        
+        - path (`str` or `None`): Path to be used as standard destination, if `None` will set the default value:
+        `"~/Downloads/ftp_downloads"` or the OS equivalent
+        
+        Returns:
+        
+        `None`"""
         if not path:
             user_folder = os.path.expanduser("~")
-            setattr(self, "download_folder", os.path.join(user_folder, "Downloads"))
-        else:
-            setattr(self, "download_folder", path)
+            full_path = os.path.join(user_folder, "Downloads", "ftp_downloads")
+            normalpath = os.path.normpath(full_path)
 
-    def set_max_concurrent_jobs(self, amount) -> asyncio.Semaphore:
+        else:
+            normalpath = os.path.normpath(path)
+        
+        setattr(self, "download_folder", normalpath)
+
+    def set_max_concurrent_jobs(self, amount: int | None=None) -> None:
+        """Defines a globally used `asyncio.Semaphore` that sets the maximum amount of concurrent downloads.
+        
+        Args:
+        
+        - amount (`int` or `None`): Maximum amount of cuncurrent downloads, if `None` will set the default value: 20
+        
+        Returns:
+        
+        `None`"""
+        if not amount:
+            amount = 20
+
         setattr(self, "semaphore", asyncio.Semaphore(amount))
 
 Conf = GlobalConfigDefaults()

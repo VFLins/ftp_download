@@ -9,30 +9,25 @@ from pathlib import PureWindowsPath
 
 # IMPORTANT: https://kb.globalscape.com/KnowledgebaseArticle10142.aspx
 
-def normal_path(
-        path:       str, 
-        as_posix:   bool=True
+def posix_path(
+        path:       str
     ) -> str:
     
     """
-    Normalizes a path received.
-
-    Should be used with `as_posix=True` (default) to normalize paths compatible usual FTP file systems (unix-like). Otherwise the pathname will be compatible with current running OS.
+    Normalizes a path and make compatible usual FTP file systems (unix-like).
 
     Args:
 
     - path (`str`): The path to be normalized;
-    - as_posix (`bool`): If `True`, output will be in posix style, otherwise returns in current OS style (might still be posix). Defaults to `True`.
 
     Returns:
 
-    A string with path normalized
-
+    A `str` with path normalized.
     """
 
     is_windows = (os.path.sep == "\\")
     
-    if is_windows and as_posix:
+    if is_windows:
         posix_path = PureWindowsPath(path).as_posix()
         swap_drive_letter_for_root = re.compile("[A-Z]:/", re.IGNORECASE)
         return swap_drive_letter_for_root.sub("/", posix_path)
@@ -58,7 +53,7 @@ def change_remote_wd(
     `bool` indicating wether the operation was successful or not.
     """
 
-    path = normal_path(path)
+    path = posix_path(path)
     
     for attempt in range(1, Conf.retry+1):
         try:
@@ -87,7 +82,7 @@ def change_remote_wd(
         except Exception:
             print("Unexpected error:\n", Exception)
 
-    current_path = normal_path(ftp.pwd())
+    current_path = posix_path(ftp.pwd())
 
     return current_path == path
 
@@ -100,7 +95,7 @@ def describe_dir(ftp: ftplib.FTP, path: str='') -> Dict[str, List[str]]:
     capturer = StringIO()
     sys.stdout = capturer
 
-    ftp.dir(normal_path(path))
+    ftp.dir(posix_path(path))
 
     sys.stdout = curr_stdout
     # Capture stdout as a list
