@@ -1,23 +1,23 @@
 import pytest
 from ftplib import FTP, error_temp
 from ftp_download.ensure import (
-    normal_path,
+    posix_path,
     describe_dir,
     login
 )
 
 @pytest.mark.parametrize(
-    "inp,out,as_posix", [
-    ("C:\\path\\to\\something", "/path/to/something", True),
-    ("C:\\path\\to\\something\\", "/path/to/something", True),
-    ("/path/to/something", "/path/to/something", True),
-    ("/path/to/something/", "/path/to/something", True),
-    ("C:\\", "/", True),
-    ("/path/to/file.foo" , "/path/to/file.foo", True),
-    ("C:\\path\\to\\file.foo", "/path/to/file.foo", True)]
+    "inp,out,", [
+    ("C:\\path\\to\\something", "/path/to/something"),
+    ("C:\\path\\to\\something\\", "/path/to/something"),
+    ("/path/to/something", "/path/to/something"),
+    ("/path/to/something/", "/path/to/something"),
+    ("C:\\", "/"),
+    ("/path/to/file.foo" , "/path/to/file.foo"),
+    ("C:\\path\\to\\file.foo", "/path/to/file.foo")]
 )
-def test_normal_path(inp, out, as_posix):
-    assert normal_path(inp, as_posix) == out
+def test_posix_path(inp, out):
+    assert posix_path(inp) == out
 
 @pytest.mark.xfail(reason="Might fail due to network issues")
 def test_describe_dir():
