@@ -1,14 +1,33 @@
 import asyncio
-import ftplib
 import os
+import ftplib
 from .prefs import Conf
-
 from typing import Callable, Awaitable, List
 
+
 # Create a local file with the same name inside `local_path`
-async def download_task(ftp, remote_file_path, local_path) -> None:
+async def download_task(
+        ftp: ftplib.FTP,
+        remote_file_path: str,
+        local_path: str
+        ) -> None:
+    """
+    Asynchronous task that downloads a single file.
+
+    Args:
+
+    - ftp (`ftplib.FTP`): `ftplib.FTP` object logged in to the server that houses the file to be downloaded
+    - remote_file_path (`str`): path to the file on the remote server
+    - local_path (`str`): path to local folder where the file will be downloaded
+
+    Returns:
+
+    `None`
+    """ # noqa
+
     remote_path, filename = os.path.split(remote_file_path)
     local_file_path = os.path.join(local_path, filename)
+
     async with Conf.semaphore:
         with open(local_file_path, "wb") as local_file:
 
@@ -17,28 +36,27 @@ async def download_task(ftp, remote_file_path, local_path) -> None:
                     print(f"Retrieving {filename}...")
 
                 ftp.retrbinary(f"RETR {remote_file_path}", local_file.write)
-                
+
                 if Conf.verbose:
                     print(f"File saved: {local_file_path}")
 
             except Exception as UnexpectedError:
                 print(f"Error downloading {filename}:\n{UnexpectedError}")
 
-async def download_multiple(download_tasks: List[Callable[[Awaitable], None]]) -> None:
+
+async def download_multiple(
+        download_tasks: List[Callable[[Awaitable], None]]
+        ) -> None:
+    """
+    Runs multiple downloads asynchronously, it's meant to be called by `ftp_download.from_folder()`
+
+    Args:
+
+    - download_tasks (`list(awaitables)`): List of `ftp_download.timings.download_task()`
+
+    Returns:
+
+    `None`
+    """  # noqa
+
     await asyncio.gather(*download_tasks)
-
-async def not_resetable():
-    asyncio.sleep(Conf.no_reset_timeout)
-    raise ftplib.error_temp(f"Maximum wait time ({Conf.no_reset_timeout} seconds) exceeded")
-
-async def resetable():
-    asyncio.sleep(Conf.timeout)
-    raise ftplib.error_temp(f"")
-
-def event_loop_available():
-    try:
-        asyncio.get_event_loop()
-    except RuntimeError:
-        return False
-    else:
-        return True
