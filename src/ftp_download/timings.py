@@ -14,15 +14,11 @@ async def download_task(
     """
     Asynchronous task that downloads a single file.
 
-    Args:
+    ### Args:
 
-    - ftp (`ftplib.FTP`): `ftplib.FTP` object logged in to the server that houses the file to be downloaded
-    - remote_file_path (`str`): path to the file on the remote server
-    - local_path (`str`): path to local folder where the file will be downloaded
-
-    Returns:
-
-    `None`
+    - **ftp** (`ftplib.FTP`): `ftplib.FTP` object logged in to the server that houses the file to be downloaded
+    - **remote_file_path** (`str`): path to the file on the remote server
+    - **local_path** (`str`): path to local folder where the file will be downloaded
     """ # noqa
 
     remote_path, filename = os.path.split(remote_file_path)
@@ -50,13 +46,9 @@ async def download_multiple(
     """
     Runs multiple downloads asynchronously, it's meant to be called by `ftp_download.from_folder()`
 
-    Args:
+    ### Args:
 
-    - download_tasks (`list(awaitables)`): List of `ftp_download.timings.download_task()`
-
-    Returns:
-
-    `None`
+    - **download_tasks** (`list(awaitables)`): List of `ftp_download.timings.download_task()`
     """  # noqa
 
     await asyncio.gather(*download_tasks)

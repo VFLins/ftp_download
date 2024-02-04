@@ -15,13 +15,13 @@ def posix_path(path: str) -> str:
     """
     Normalizes a path and make compatible usual FTP file systems (unix-like).
 
-    Args:
+    ### Args:
 
-    - path (`str`): The path to be normalized;
+    - **path** (`str`): The path to be normalized;
 
-    Returns:
+    ### Returns:
 
-    A `str` with path normalized.
+    A `str` with path normalized and in posix format.
     """ # noqa
 
     is_windows = (os.path.sep == "\\")
@@ -39,6 +39,19 @@ def describe_dir(
         ftp: ftplib.FTP,
         path: str = ''
         ) -> Dict[str, List[str]]:
+    
+    """
+    Describes the remote path showing names of files and folders in the specified directory.
+
+    ### Args:
+
+    - **ftp** (`ftplib.FTP`): A `ftplib.FTP` connected and logged in to the server
+    - **path** (`str`): Path to be described
+
+    ### Returns:
+
+    A `dict` with two keys `"dirs"` and `"files"`. The first stores a `list` of dirnames in the specified directory, and the latter stores a `list` of filenames.
+    """
 
     # Capturing stdout adapted from:
     # https://stackoverflow.com/questions/5136611/capture-stdout-from-a-script
@@ -69,7 +82,16 @@ def describe_dir(
     return paths
 
 
-def login(ftp: ftplib.FTP):
+def login(ftp: ftplib.FTP) -> None:
+    
+    """
+    Logs in to the specified `ftplib.FTP` object's server and skips any login error.
+
+    ### Args:
+
+    - **ftp** (`ftplib.FTP`): A connected `ftplib.FTP` object
+    """
+
     try:
         ftp.login()
     except ftplib.error_perm as perm_err:
