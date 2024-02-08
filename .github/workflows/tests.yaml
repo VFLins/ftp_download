@@ -2,7 +2,7 @@ Name: Tests
 
 on:
   - push
-  - pull_requests
+  - pull_request
 
 jobs:
   test:
