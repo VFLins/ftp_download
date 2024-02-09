@@ -4,17 +4,17 @@ from os.path import join, expanduser
 
 class GlobalConfigDefaults():
     def __init__(self):
-        self.verbose: bool = False
+        self.verbose: bool = True
         """Should event messages be printed do `stdout`?"""
 
         self.timeout: int = 10
-        """Time to wait for request responses in seconds"""
+        """Time to wait for request responses in seconds (unused yet)"""
 
         self.retry: int = 5
-        """Maximum amount of attempts for every request"""
+        """Maximum amount of attempts for every request (unused yet)"""
 
         self.raise_if_invalid: bool = True
-        """Shoud stop if an error is encountered? If `False` it will just print a message""" # noqa
+        """Shoud stop if an error is encountered? If `False` it will just print a message (unused yet)""" # noqa
 
         self.download_folder: str = join(
             expanduser("~"), "Downloads", "ftp_download"
