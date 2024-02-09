@@ -2,6 +2,9 @@
 
 Utilities to download files from ftp servers with Python.
 
+![Tests on unix systems](https://github.com/VFLins/ftp_download/actions/workflows/tests-unix.yml/badge.svg)
+![Tests on windows systems](https://github.com/VFLins/ftp_download/actions/workflows/tests-windows.yml/badge.svg)
+
 # Getting started:
 
 `ftp_download` is built upon Python's [`ftplib`](https://docs.python.org/3/library/ftplib.html), an it is a higher level interface made to allow downloads from ftp servers with simple and straightfoward code. 
