@@ -24,15 +24,9 @@ def posix_path(path: str) -> str:
     A `str` with path normalized and in posix format.
     """ # noqa
 
-    is_windows = (os.path.sep == "\\")
-
-    if is_windows:
-        posix_path = PureWindowsPath(path).as_posix()
-        swap_drive_letter_for_root = re.compile("[A-Z]:/", re.IGNORECASE)
-        return swap_drive_letter_for_root.sub("/", posix_path)
-
-    else:
-        return os.path.normpath(path)
+    posix_path = PureWindowsPath(path).as_posix()
+    swap_drive_letter_for_root = re.compile("[A-Z]:/", re.IGNORECASE)
+    return swap_drive_letter_for_root.sub("/", posix_path)
 
 
 def describe_dir(
