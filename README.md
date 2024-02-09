@@ -66,10 +66,10 @@ It's also important to notice that currently, `ftp_download` will not create a n
 `ftp_download` will have a standard behavior that can be tweaked by changing the default values of `ftp_download.Conf`:
 
 ```
-import ftp_download as ftp
+import ftp_download as ftpd
 
 # To stop printing event messages to stdout (default: True)
-ftp.Conf.verbose = False
+ftpd.Conf.verbose = False
 
 # To change the standard download path (default: {user_folder}/Downloads/ftp_download)
 ftpd.Conf.download_folder = "C:\\my\\custom\\path"
