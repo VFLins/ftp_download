@@ -38,6 +38,8 @@ lp = os.path.expanduser("~") # Download to user folder
 ftpd.file(ftp, remote_file_path=rp, local_path=lp)
 ```
 
+Notice that `local_path` was specified, but if not, `ftp_download` will save the files in `{user}/Downloads/ftp_download`.
+
 ## Download files from a folder
 
 You can also give a path to a folder and download everything from there, notice that this is not recursive, and will get only the files.
