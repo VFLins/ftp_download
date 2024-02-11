@@ -5,6 +5,14 @@ Utilities to download files from ftp servers with Python.
 ![Tests on unix systems](https://github.com/VFLins/ftp_download/actions/workflows/tests-unix.yml/badge.svg)
 ![Tests on windows systems](https://github.com/VFLins/ftp_download/actions/workflows/tests-windows.yml/badge.svg)
 
+# Installation
+
+Install from PyPI using `pip`:
+
+```
+pip install ftp_download
+```
+
 # Getting started:
 
 `ftp_download` is built upon Python's [`ftplib`](https://docs.python.org/3/library/ftplib.html), an it is a higher level interface made to allow downloads from ftp servers with simple and straightfoward code. 
@@ -24,7 +32,7 @@ ftp = FTP(
 
 Then you can start downloading. **Here are some examples:**
 
-## Download a single file
+### Download a single file
 
 ```
 import ftp_download as ftpd
@@ -43,7 +51,7 @@ ftpd.file(ftp, remote_file_path=rp, local_path=lp)
 
 Notice that `local_path` was specified, but if not, `ftp_download` will save the files in `{user}/Downloads/ftp_download`.
 
-## Download files from a folder
+### Download files from a folder
 
 You can also give a path to a folder and download everything from there, notice that this is not recursive, and will get only the files.
 
@@ -64,7 +72,7 @@ ftpd.from_folder(ftp, remote_path=rp, local_path=lp)
 
 It's also important to notice that currently, `ftp_download` will not create a new folder on the `local_path` specified.
 
-## Important configurations
+### Important configurations
 
 `ftp_download` will have a standard behavior that can be tweaked by changing the default values of `ftp_download.Conf`:
 
