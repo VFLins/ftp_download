@@ -1,5 +1,3 @@
-# This is `ftp_download`
-
 Utilities to download files from ftp servers with Python.
 
 ![Tests on unix systems](https://github.com/VFLins/ftp_download/actions/workflows/tests-unix.yml/badge.svg)
