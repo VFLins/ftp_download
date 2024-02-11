@@ -80,3 +80,7 @@ ftpd.Conf.download_folder = "C:\\my\\custom\\path"
 # To change the maximum amount of concurrent downloads (default: 20)
 ftpd.Conf.set_max_concurrent_jobs(300)
 ```
+
+# Documentation
+
+For more information, read the [documentation](https://vflins.github.io/ftp_download/docs/ftp_download.html).
