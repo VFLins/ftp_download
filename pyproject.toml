@@ -1,12 +1,47 @@
+[project]
+name = "ftp_download"
+authors = [
+    {name = "Vitor F. Lins", email = "vflins@live.com"},
+]
+description = "Easily download files from ftp servers!"
+requires-python = ">=3.6"
+keywords = ["download", "ftp"]
+license = {file = "LICENSE"}
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License"
+]
+version = "0.1.0"
+
+[project.urls]
+Repository = "https://github.com/VFLins/ftp_download"
+Documentation = "https://vflins.github.io/ftp_download/docs/ftp_download.html"
+
+[project.optional-dependencies]
+test = [
+    "flake8==7.0.0",
+    "pytest==7.4.4",
+    "pytest-cov==4.1.0",
+    "tox==4.12.0",
+    "mypy==1.8.0",
+    "pdoc==14.3.0",
+    "wheel==0.42.0"
+]
+
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 addopts = "--cov=ftp_download"
-testpaths = [
-    "tests",
-]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
 
 [tool.mypy]
 mypy_path = "src"
