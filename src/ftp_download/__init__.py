@@ -23,7 +23,7 @@ def file(
 
     - **ftp** (`ftplib.FTP`): A `ftplib.FTP` object, expects to be already connected and logged in
     - **remote_file_path** (`str`):  Full path including filename of the file that will be downloaded
-    - **local_path** (`str`): Full path to local directory where the file will be downloaded, defaults to `prefs.GlobalConfigDefaults.set_default_download_folder()`'s default value
+    - **local_path** (`str`): Full path to local directory where the file will be downloaded, defaults to `Conf.download_folder`'s value
     """ # noqa
 
     ensure.login(ftp=ftp)
