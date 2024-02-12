@@ -1,9 +1,9 @@
-# This is `ftp_download`
-
 Utilities to download files from ftp servers with Python.
 
 ![Tests on unix systems](https://github.com/VFLins/ftp_download/actions/workflows/tests-unix.yml/badge.svg)
 ![Tests on windows systems](https://github.com/VFLins/ftp_download/actions/workflows/tests-windows.yml/badge.svg)
+<a href="https://vflins.github.io/ftp_download/docs/ftp_download.html" ><img alt="Static Badge" src="https://img.shields.io/badge/documentation%20-%20vflins.github.io%20-%20blue?logo=github&color=blue">
+</a>
 
 # Installation
 
@@ -34,43 +34,42 @@ Then you can start downloading. **Here are some examples:**
 
 ### Download a single file
 
+For the examples here we will go with:
+
 ```
 import ftp_download as ftpd
 from ftplib import FTP
 import os
 
+ftp = FTP("cran.r-project.org")
+```
+
+To download a file we can do this:
+
+```
 # downloading /pub/R/CRANlogo.png 
 # from cran.r-project.org
 
-ftp = FTP("cran.r-project.org")
 rp = "/pub/R/CRANlogo.png"
 lp = os.path.expanduser("~") # Download to user folder
 
 ftpd.file(ftp, remote_file_path=rp, local_path=lp)
 ```
 
-Notice that `local_path` was specified, but if not, `ftp_download` will save the files in `{user}/Downloads/ftp_download`.
+Notice that `local_path` was specified, but if not, `ftp_download` will save the files in `{user_folder}/Downloads/ftp_download`.
 
 ### Download files from a folder
 
-You can also give a path to a folder and download everything from there, notice that this is not recursive, and will get only the files.
+You can also give a path to a folder and download everything from there, notice that this is not recursive, and will get only the files at the top level of `remote_path`.
 
 ```
-import ftp_download as ftpd
-from ftplib import FTP
-import os
-
-# downloading contents of /pub/R/web
-# from cran.r-project.org
-
-ftp = FTP("cran.r-project.org")
 rp = "/pub/R/web"
 lp = os.path.expanduser("~") # Download to user folder
 
 ftpd.from_folder(ftp, remote_path=rp, local_path=lp)
 ```
 
-It's also important to notice that currently, `ftp_download` will not create a new folder on the `local_path` specified.
+It's also important to notice that currently, `ftp_download` will not create a "web" folder on the `local_path` specified.
 
 ### Important configurations
 
@@ -89,6 +88,4 @@ ftpd.Conf.download_folder = "C:\\my\\custom\\path"
 ftpd.Conf.set_max_concurrent_jobs(300)
 ```
 
-# Documentation
-
-For more information, read the [documentation](https://vflins.github.io/ftp_download/docs/ftp_download.html).
+For more information, read the [documentation](https://vflins.github.io/ftp_download/docs/ftp_download/prefs.html).
