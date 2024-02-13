@@ -3,7 +3,6 @@ from . import timings
 from .prefs import Conf
 
 from os import path, makedirs
-import asyncio
 import ftplib  # https://github.com/python/cpython/blob/3.12/Lib/ftplib.py
 from typing import Optional
 
@@ -62,7 +61,6 @@ def from_folder(
         makedirs(local_path)
 
     filenames = ensure.describe_dir(ftp, remote_path)["files"]
-    tasks = []
     for idx, filename in enumerate(filenames):
 
         if Conf.verbose:

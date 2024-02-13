@@ -20,11 +20,12 @@ class GlobalConfigDefaults():
             expanduser("~"), "Downloads", "ftp_download"
         )
         """Standard destination path for all downloads"""
-        
+
         try:
             self.loop = asyncio.get_running_loop()
         except RuntimeError:
             self.loop = asyncio.new_event_loop()
+        """Get running event loop or create new with `asyncio`"""
 
         self.set_max_concurrent_jobs()
 

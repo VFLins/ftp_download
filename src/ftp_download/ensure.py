@@ -1,4 +1,3 @@
-import os
 import re
 import sys
 from io import StringIO

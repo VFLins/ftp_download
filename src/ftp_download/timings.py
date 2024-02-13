@@ -1,8 +1,6 @@
-import asyncio
 import os
 import ftplib
 from .prefs import Conf
-from typing import Callable, Awaitable, List
 
 
 # Create a local file with the same name inside `local_path`
