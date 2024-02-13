@@ -2,7 +2,7 @@ from . import ensure
 from . import timings
 from .prefs import Conf
 
-import os
+from os import path, makedirs
 import asyncio
 import ftplib  # https://github.com/python/cpython/blob/3.12/Lib/ftplib.py
 from typing import Optional
@@ -28,21 +28,11 @@ def file(
 
     ensure.login(ftp=ftp)
 
-    if not os.path.exists(local_path):
-        os.makedirs(local_path)
+    if not path.exists(local_path):
+        makedirs(local_path)
 
-    try:
-        loop = asyncio.get_running_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-
-    try:
-        loop.run_until_complete(
-            timings.download_task(ftp, remote_file_path, local_path)
-        )
-    except Exception as xpt:
-        print(f"Unexpected error downloading the file:\n{xpt}")
-    loop.close()
+    task = timings.download_task(ftp, remote_file_path, local_path)
+    Conf.loop.create_task(task)
 
 
 def from_folder(
@@ -66,15 +56,10 @@ def from_folder(
     ensure.login(ftp=ftp)
 
     remote_path = ensure.posix_path(remote_path)
-    local_path = os.path.normpath(local_path)
+    local_path = path.normpath(local_path)
 
-    if not os.path.exists(local_path):
-        os.makedirs(local_path)
-
-    try:
-        loop = asyncio.get_running_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
+    if not path.exists(local_path):
+        makedirs(local_path)
 
     filenames = ensure.describe_dir(ftp, remote_path)["files"]
     tasks = []
@@ -86,14 +71,7 @@ def from_folder(
         if stops_with == idx:
             break
 
-        remote_file_path = ensure.posix_path(
-            os.path.join(remote_path, filename)
-        )
+        remote_file_path = ensure.posix_path(path.join(remote_path, filename))
 
         task = timings.download_task(ftp, remote_file_path, local_path)
-        tasks.append(task)
-
-    loop.run_until_complete(timings.download_multiple(tasks))
-
-    if Conf.verbose:
-        print("Completed!")
+        Conf.loop.create_task(task)

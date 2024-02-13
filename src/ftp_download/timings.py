@@ -21,7 +21,7 @@ async def download_task(
     - **local_path** (`str`): path to local folder where the file will be downloaded
     """ # noqa
 
-    remote_path, filename = os.path.split(remote_file_path)
+    filename = os.path.split(remote_file_path)[1]
     local_file_path = os.path.join(local_path, filename)
 
     async with Conf.semaphore:
@@ -37,18 +37,4 @@ async def download_task(
                     print(f"File saved: {local_file_path}")
 
             except Exception as UnexpectedError:
-                print(f"Error downloading {filename}:\n{UnexpectedError}")
-
-
-async def download_multiple(
-        download_tasks: List[Callable[[Awaitable], None]]
-        ) -> None:
-    """
-    Runs multiple downloads asynchronously, it's meant to be called by `ftp_download.from_folder()`
-
-    ### Args:
-
-    - **download_tasks** (`list(awaitables)`): List of `ftp_download.timings.download_task()`
-    """  # noqa
-
-    await asyncio.gather(*download_tasks)
+                print(f"Could not download {filename}:\n{UnexpectedError}")
