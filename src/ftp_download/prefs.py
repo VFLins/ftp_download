@@ -2,7 +2,7 @@ import asyncio
 from os.path import join, expanduser
 
 
-class GlobalConfigDefaults():
+class GlobalConfigDefaults:
     def __init__(self):
         self.verbose: bool = True
         """Should event messages be printed do `stdout`?"""
@@ -34,11 +34,10 @@ class GlobalConfigDefaults():
 
     def __repr__(self):
         return (
-            "[Current ftp_download settings]\n" +
-            f"verbose = {self.verbose}\n" +
-            f"timeout = {self.timeout} seconds\n" +
-            f"retry = {self.retry} times\n" +
-            f"max_concurrent_jobs = {self.semaphore._value}\n" +
+            "FTP_DOWLOAD SETTINGS: \n" +
+            f"verbose = {self.verbose}; \n" +
+            f"use_async = {self.use_async}; \n" +
+            f"max_concurrent_jobs = {self.semaphore._value}; \n" +
             f"download_folder = {self.download_folder}"
         )
 
