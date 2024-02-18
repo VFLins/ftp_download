@@ -1,6 +1,6 @@
 ![Project banner](docs/gh_banner.png)
 
-Utilities to download files from ftp servers with Python.
+Easily download files from ftp servers!
 
 ![Tests on unix systems](https://github.com/VFLins/ftp_download/actions/workflows/tests-unix.yml/badge.svg)
 ![Tests on windows systems](https://github.com/VFLins/ftp_download/actions/workflows/tests-windows.yml/badge.svg)
