@@ -80,13 +80,7 @@ def set_log_configs():
 
     logging.basicConfig(
         filename=LOG_PLACE,
-        format="[%(asctime)s] - %(name)s::%(levelname)s - %(message)s",
+        format="[%(asctime)s] - %(levelname)s::%(name)s - %(message)s",
         level=logging.DEBUG
     )
 set_log_configs()
-""" 
-fmt = logging.Formatter(
-    "[%(asctime)s] - %(name)s::%(levelname)s - %(message)s")
-hdl = logging.FileHandler(filename=LOG_PLACE)
-hdl.setFormatter(fmt)
-hdl.setLevel(logging.DEBUG) """
