@@ -9,7 +9,7 @@ def blocking_download_task(
         remote_file_path: str, # Create a local file with the same name inside `local_path`
         local_path: str
         ) -> None:
-    
+
     """
     Sychronous version of `download_task()`.
 
@@ -43,6 +43,7 @@ async def download_task(
         remote_file_path: str, # Create a local file with the same name inside `local_path`
         local_path: str
         ) -> None:
+
     """
     Asynchronous task that downloads a single file.
 
@@ -70,3 +71,8 @@ async def download_task(
 
             except Exception as UnexpectedError:
                 print(f"Could not download {filename}:\n{UnexpectedError}")
+
+
+async def run_multiple(tasks:list) -> None:
+    for task in tasks:
+        await task

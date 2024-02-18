@@ -3,6 +3,7 @@ from . import timings
 from .prefs import Conf
 
 from os import path, makedirs
+import asyncio
 import ftplib  # https://github.com/python/cpython/blob/3.12/Lib/ftplib.py
 from typing import Optional
 
@@ -32,7 +33,8 @@ def file(
 
     if Conf.use_async:
         task = timings.download_task(ftp, remote_file_path, local_path)
-        Conf.loop.create_task(task)
+        asyncio.run(task)
+
     else:
         timings.blocking_download_task(ftp, remote_file_path, local_path)
 
@@ -63,7 +65,11 @@ def from_folder(
     if not path.exists(local_path):
         makedirs(local_path)
 
+    if Conf.use_async:
+        Conf.reset_event_loop()
+
     filenames = ensure.describe_dir(ftp, remote_path)["files"]
+    tasks = []
     for idx, filename in enumerate(filenames):
 
         if Conf.verbose:
@@ -76,6 +82,9 @@ def from_folder(
 
         if Conf.use_async:
             task = timings.download_task(ftp, remote_file_path, local_path)
-            Conf.loop.create_task(task)
+            tasks.append(task)
         else:
             timings.blocking_download_task(ftp, remote_file_path, local_path)
+    
+    if Conf.use_async:
+        asyncio.run(timings.run_multiple(tasks))

@@ -56,6 +56,19 @@ class GlobalConfigDefaults:
 
         setattr(self, "semaphore", asyncio.Semaphore(amount))
 
+    def reset_event_loop(self) -> None:
+
+        """
+        Replaces the current event loop if it is closed
+        """
+        if self.loop.is_closed():
+            self.loop = asyncio.new_event_loop()
+        else:
+            try:
+                self.loop = asyncio.get_running_loop()
+            except RuntimeError:
+                self.loop = asyncio.new_event_loop()
+
 
 Conf = GlobalConfigDefaults()
 """Stores global configuration parameters, change it's parameter values to set your preferences""" # noqa
