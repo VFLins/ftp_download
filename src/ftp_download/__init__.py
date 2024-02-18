@@ -34,7 +34,7 @@ def file(
 
     if Conf.use_async:
         task = timings.download_task(ftp, remote_file_path, local_path)
-        asyncio.run(task)
+        timings.run(task)
 
     else:
         timings.blocking_download_task(ftp, remote_file_path, local_path)
@@ -92,5 +92,5 @@ def from_folder(
             loop = asyncio.get_running_loop()
             loop.create_task(timings.run_multiple(tasks))
         except RuntimeError:
-            asyncio.run(timings.run_multiple(tasks))
+            timings.run(timings.run_multiple(tasks))
       
