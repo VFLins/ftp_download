@@ -46,6 +46,9 @@
                                 <a class="variable" href="#GlobalConfigDefaults.raise_if_invalid">raise_if_invalid</a>
                         </li>
                         <li>
+                                <a class="variable" href="#GlobalConfigDefaults.use_async">use_async</a>
+                        </li>
+                        <li>
                                 <a class="variable" href="#GlobalConfigDefaults.download_folder">download_folder</a>
                         </li>
                         <li>
@@ -96,41 +99,50 @@
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_if_invalid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Shoud stop if an error is encountered? If `False` it will just print a message (unused yet)&quot;&quot;&quot;</span> <span class="c1"># noqa</span>
 </span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">download_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>            <span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;Downloads&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp_download&quot;</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>        <span class="p">)</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Standard destination path for all downloads&quot;&quot;&quot;</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">set_max_concurrent_jobs</span><span class="p">()</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>        <span class="k">return</span> <span class="p">(</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>            <span class="s2">&quot;[Current ftp_download settings]</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>            <span class="sa">f</span><span class="s2">&quot;verbose = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>            <span class="sa">f</span><span class="s2">&quot;timeout = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> seconds</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>            <span class="sa">f</span><span class="s2">&quot;retry = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">retry</span><span class="si">}</span><span class="s2"> times</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>            <span class="sa">f</span><span class="s2">&quot;max_concurrent_jobs = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span><span class="o">.</span><span class="n">_value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>            <span class="sa">f</span><span class="s2">&quot;download_folder = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">download_folder</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>        <span class="p">)</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="k">def</span> <span class="nf">set_max_concurrent_jobs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="sd">        Defines a globally used `asyncio.Semaphore` that sets the maximum amount of concurrent downloads.</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="sd">        </span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="sd">        ### Args:</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="sd">        </span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">        - **amount** (`int`): Maximum amount of cuncurrent downloads, defaults to `20`</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">        &quot;&quot;&quot;</span> <span class="c1"># noqa</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">amount</span><span class="p">:</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>            <span class="n">amount</span> <span class="o">=</span> <span class="mi">20</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;semaphore&quot;</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">amount</span><span class="p">))</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="n">Conf</span> <span class="o">=</span> <span class="n">GlobalConfigDefaults</span><span class="p">()</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">&quot;&quot;&quot;Stores global configuration parameters, change it&#39;s parameter values to set your preferences&quot;&quot;&quot;</span> <span class="c1"># noqa</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">use_async</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Should send asynchronous download requests? If `True` it might get faster downloads, but will be incompatible with Jupyter Notebooks and some implementations of GUI applications.&quot;&quot;&quot;</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">download_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>            <span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;Downloads&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp_download&quot;</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="p">)</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Standard destination path for all downloads&quot;&quot;&quot;</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get running event loop or create new with `asyncio`&quot;&quot;&quot;</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">set_max_concurrent_jobs</span><span class="p">()</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>        <span class="k">return</span> <span class="p">(</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>            <span class="s2">&quot;[Current ftp_download settings]</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>            <span class="sa">f</span><span class="s2">&quot;verbose = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>            <span class="sa">f</span><span class="s2">&quot;timeout = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> seconds</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>            <span class="sa">f</span><span class="s2">&quot;retry = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">retry</span><span class="si">}</span><span class="s2"> times</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>            <span class="sa">f</span><span class="s2">&quot;max_concurrent_jobs = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span><span class="o">.</span><span class="n">_value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>            <span class="sa">f</span><span class="s2">&quot;download_folder = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">download_folder</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>        <span class="p">)</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>    <span class="k">def</span> <span class="nf">set_max_concurrent_jobs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="sd">        Defines a globally used `asyncio.Semaphore` that sets the maximum amount of concurrent downloads.</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a><span class="sd">        </span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">        ### Args:</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="sd">        </span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="sd">        - **amount** (`int`): Maximum amount of cuncurrent downloads, defaults to `20`</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">        &quot;&quot;&quot;</span> <span class="c1"># noqa</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">amount</span><span class="p">:</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>            <span class="n">amount</span> <span class="o">=</span> <span class="mi">20</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;semaphore&quot;</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">amount</span><span class="p">))</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a><span class="n">Conf</span> <span class="o">=</span> <span class="n">GlobalConfigDefaults</span><span class="p">()</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a><span class="sd">&quot;&quot;&quot;Stores global configuration parameters, change it&#39;s parameter values to set your preferences&quot;&quot;&quot;</span> <span class="c1"># noqa</span>
 </span></pre></div>
 
 
@@ -160,37 +172,46 @@
 </span><span id="GlobalConfigDefaults-17"><a href="#GlobalConfigDefaults-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">raise_if_invalid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 </span><span id="GlobalConfigDefaults-18"><a href="#GlobalConfigDefaults-18"><span class="linenos">18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Shoud stop if an error is encountered? If `False` it will just print a message (unused yet)&quot;&quot;&quot;</span> <span class="c1"># noqa</span>
 </span><span id="GlobalConfigDefaults-19"><a href="#GlobalConfigDefaults-19"><span class="linenos">19</span></a>
-</span><span id="GlobalConfigDefaults-20"><a href="#GlobalConfigDefaults-20"><span class="linenos">20</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">download_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span>
-</span><span id="GlobalConfigDefaults-21"><a href="#GlobalConfigDefaults-21"><span class="linenos">21</span></a>            <span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;Downloads&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp_download&quot;</span>
-</span><span id="GlobalConfigDefaults-22"><a href="#GlobalConfigDefaults-22"><span class="linenos">22</span></a>        <span class="p">)</span>
-</span><span id="GlobalConfigDefaults-23"><a href="#GlobalConfigDefaults-23"><span class="linenos">23</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Standard destination path for all downloads&quot;&quot;&quot;</span>
-</span><span id="GlobalConfigDefaults-24"><a href="#GlobalConfigDefaults-24"><span class="linenos">24</span></a>
-</span><span id="GlobalConfigDefaults-25"><a href="#GlobalConfigDefaults-25"><span class="linenos">25</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">set_max_concurrent_jobs</span><span class="p">()</span>
-</span><span id="GlobalConfigDefaults-26"><a href="#GlobalConfigDefaults-26"><span class="linenos">26</span></a>
-</span><span id="GlobalConfigDefaults-27"><a href="#GlobalConfigDefaults-27"><span class="linenos">27</span></a>    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="GlobalConfigDefaults-28"><a href="#GlobalConfigDefaults-28"><span class="linenos">28</span></a>        <span class="k">return</span> <span class="p">(</span>
-</span><span id="GlobalConfigDefaults-29"><a href="#GlobalConfigDefaults-29"><span class="linenos">29</span></a>            <span class="s2">&quot;[Current ftp_download settings]</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-</span><span id="GlobalConfigDefaults-30"><a href="#GlobalConfigDefaults-30"><span class="linenos">30</span></a>            <span class="sa">f</span><span class="s2">&quot;verbose = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-</span><span id="GlobalConfigDefaults-31"><a href="#GlobalConfigDefaults-31"><span class="linenos">31</span></a>            <span class="sa">f</span><span class="s2">&quot;timeout = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> seconds</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-</span><span id="GlobalConfigDefaults-32"><a href="#GlobalConfigDefaults-32"><span class="linenos">32</span></a>            <span class="sa">f</span><span class="s2">&quot;retry = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">retry</span><span class="si">}</span><span class="s2"> times</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-</span><span id="GlobalConfigDefaults-33"><a href="#GlobalConfigDefaults-33"><span class="linenos">33</span></a>            <span class="sa">f</span><span class="s2">&quot;max_concurrent_jobs = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span><span class="o">.</span><span class="n">_value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
-</span><span id="GlobalConfigDefaults-34"><a href="#GlobalConfigDefaults-34"><span class="linenos">34</span></a>            <span class="sa">f</span><span class="s2">&quot;download_folder = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">download_folder</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="GlobalConfigDefaults-35"><a href="#GlobalConfigDefaults-35"><span class="linenos">35</span></a>        <span class="p">)</span>
-</span><span id="GlobalConfigDefaults-36"><a href="#GlobalConfigDefaults-36"><span class="linenos">36</span></a>
-</span><span id="GlobalConfigDefaults-37"><a href="#GlobalConfigDefaults-37"><span class="linenos">37</span></a>    <span class="k">def</span> <span class="nf">set_max_concurrent_jobs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="GlobalConfigDefaults-38"><a href="#GlobalConfigDefaults-38"><span class="linenos">38</span></a>
-</span><span id="GlobalConfigDefaults-39"><a href="#GlobalConfigDefaults-39"><span class="linenos">39</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="GlobalConfigDefaults-40"><a href="#GlobalConfigDefaults-40"><span class="linenos">40</span></a><span class="sd">        Defines a globally used `asyncio.Semaphore` that sets the maximum amount of concurrent downloads.</span>
-</span><span id="GlobalConfigDefaults-41"><a href="#GlobalConfigDefaults-41"><span class="linenos">41</span></a><span class="sd">        </span>
-</span><span id="GlobalConfigDefaults-42"><a href="#GlobalConfigDefaults-42"><span class="linenos">42</span></a><span class="sd">        ### Args:</span>
-</span><span id="GlobalConfigDefaults-43"><a href="#GlobalConfigDefaults-43"><span class="linenos">43</span></a><span class="sd">        </span>
-</span><span id="GlobalConfigDefaults-44"><a href="#GlobalConfigDefaults-44"><span class="linenos">44</span></a><span class="sd">        - **amount** (`int`): Maximum amount of cuncurrent downloads, defaults to `20`</span>
-</span><span id="GlobalConfigDefaults-45"><a href="#GlobalConfigDefaults-45"><span class="linenos">45</span></a><span class="sd">        &quot;&quot;&quot;</span> <span class="c1"># noqa</span>
-</span><span id="GlobalConfigDefaults-46"><a href="#GlobalConfigDefaults-46"><span class="linenos">46</span></a>
-</span><span id="GlobalConfigDefaults-47"><a href="#GlobalConfigDefaults-47"><span class="linenos">47</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">amount</span><span class="p">:</span>
-</span><span id="GlobalConfigDefaults-48"><a href="#GlobalConfigDefaults-48"><span class="linenos">48</span></a>            <span class="n">amount</span> <span class="o">=</span> <span class="mi">20</span>
-</span><span id="GlobalConfigDefaults-49"><a href="#GlobalConfigDefaults-49"><span class="linenos">49</span></a>
-</span><span id="GlobalConfigDefaults-50"><a href="#GlobalConfigDefaults-50"><span class="linenos">50</span></a>        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;semaphore&quot;</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">amount</span><span class="p">))</span>
+</span><span id="GlobalConfigDefaults-20"><a href="#GlobalConfigDefaults-20"><span class="linenos">20</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">use_async</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="GlobalConfigDefaults-21"><a href="#GlobalConfigDefaults-21"><span class="linenos">21</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Should send asynchronous download requests? If `True` it might get faster downloads, but will be incompatible with Jupyter Notebooks and some implementations of GUI applications.&quot;&quot;&quot;</span>
+</span><span id="GlobalConfigDefaults-22"><a href="#GlobalConfigDefaults-22"><span class="linenos">22</span></a>
+</span><span id="GlobalConfigDefaults-23"><a href="#GlobalConfigDefaults-23"><span class="linenos">23</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">download_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span>
+</span><span id="GlobalConfigDefaults-24"><a href="#GlobalConfigDefaults-24"><span class="linenos">24</span></a>            <span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;Downloads&quot;</span><span class="p">,</span> <span class="s2">&quot;ftp_download&quot;</span>
+</span><span id="GlobalConfigDefaults-25"><a href="#GlobalConfigDefaults-25"><span class="linenos">25</span></a>        <span class="p">)</span>
+</span><span id="GlobalConfigDefaults-26"><a href="#GlobalConfigDefaults-26"><span class="linenos">26</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Standard destination path for all downloads&quot;&quot;&quot;</span>
+</span><span id="GlobalConfigDefaults-27"><a href="#GlobalConfigDefaults-27"><span class="linenos">27</span></a>
+</span><span id="GlobalConfigDefaults-28"><a href="#GlobalConfigDefaults-28"><span class="linenos">28</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="GlobalConfigDefaults-29"><a href="#GlobalConfigDefaults-29"><span class="linenos">29</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+</span><span id="GlobalConfigDefaults-30"><a href="#GlobalConfigDefaults-30"><span class="linenos">30</span></a>        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+</span><span id="GlobalConfigDefaults-31"><a href="#GlobalConfigDefaults-31"><span class="linenos">31</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+</span><span id="GlobalConfigDefaults-32"><a href="#GlobalConfigDefaults-32"><span class="linenos">32</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get running event loop or create new with `asyncio`&quot;&quot;&quot;</span>
+</span><span id="GlobalConfigDefaults-33"><a href="#GlobalConfigDefaults-33"><span class="linenos">33</span></a>
+</span><span id="GlobalConfigDefaults-34"><a href="#GlobalConfigDefaults-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">set_max_concurrent_jobs</span><span class="p">()</span>
+</span><span id="GlobalConfigDefaults-35"><a href="#GlobalConfigDefaults-35"><span class="linenos">35</span></a>
+</span><span id="GlobalConfigDefaults-36"><a href="#GlobalConfigDefaults-36"><span class="linenos">36</span></a>    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="GlobalConfigDefaults-37"><a href="#GlobalConfigDefaults-37"><span class="linenos">37</span></a>        <span class="k">return</span> <span class="p">(</span>
+</span><span id="GlobalConfigDefaults-38"><a href="#GlobalConfigDefaults-38"><span class="linenos">38</span></a>            <span class="s2">&quot;[Current ftp_download settings]</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+</span><span id="GlobalConfigDefaults-39"><a href="#GlobalConfigDefaults-39"><span class="linenos">39</span></a>            <span class="sa">f</span><span class="s2">&quot;verbose = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+</span><span id="GlobalConfigDefaults-40"><a href="#GlobalConfigDefaults-40"><span class="linenos">40</span></a>            <span class="sa">f</span><span class="s2">&quot;timeout = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> seconds</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+</span><span id="GlobalConfigDefaults-41"><a href="#GlobalConfigDefaults-41"><span class="linenos">41</span></a>            <span class="sa">f</span><span class="s2">&quot;retry = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">retry</span><span class="si">}</span><span class="s2"> times</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+</span><span id="GlobalConfigDefaults-42"><a href="#GlobalConfigDefaults-42"><span class="linenos">42</span></a>            <span class="sa">f</span><span class="s2">&quot;max_concurrent_jobs = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span><span class="o">.</span><span class="n">_value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+</span><span id="GlobalConfigDefaults-43"><a href="#GlobalConfigDefaults-43"><span class="linenos">43</span></a>            <span class="sa">f</span><span class="s2">&quot;download_folder = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">download_folder</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="GlobalConfigDefaults-44"><a href="#GlobalConfigDefaults-44"><span class="linenos">44</span></a>        <span class="p">)</span>
+</span><span id="GlobalConfigDefaults-45"><a href="#GlobalConfigDefaults-45"><span class="linenos">45</span></a>
+</span><span id="GlobalConfigDefaults-46"><a href="#GlobalConfigDefaults-46"><span class="linenos">46</span></a>    <span class="k">def</span> <span class="nf">set_max_concurrent_jobs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="GlobalConfigDefaults-47"><a href="#GlobalConfigDefaults-47"><span class="linenos">47</span></a>
+</span><span id="GlobalConfigDefaults-48"><a href="#GlobalConfigDefaults-48"><span class="linenos">48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="GlobalConfigDefaults-49"><a href="#GlobalConfigDefaults-49"><span class="linenos">49</span></a><span class="sd">        Defines a globally used `asyncio.Semaphore` that sets the maximum amount of concurrent downloads.</span>
+</span><span id="GlobalConfigDefaults-50"><a href="#GlobalConfigDefaults-50"><span class="linenos">50</span></a><span class="sd">        </span>
+</span><span id="GlobalConfigDefaults-51"><a href="#GlobalConfigDefaults-51"><span class="linenos">51</span></a><span class="sd">        ### Args:</span>
+</span><span id="GlobalConfigDefaults-52"><a href="#GlobalConfigDefaults-52"><span class="linenos">52</span></a><span class="sd">        </span>
+</span><span id="GlobalConfigDefaults-53"><a href="#GlobalConfigDefaults-53"><span class="linenos">53</span></a><span class="sd">        - **amount** (`int`): Maximum amount of cuncurrent downloads, defaults to `20`</span>
+</span><span id="GlobalConfigDefaults-54"><a href="#GlobalConfigDefaults-54"><span class="linenos">54</span></a><span class="sd">        &quot;&quot;&quot;</span> <span class="c1"># noqa</span>
+</span><span id="GlobalConfigDefaults-55"><a href="#GlobalConfigDefaults-55"><span class="linenos">55</span></a>
+</span><span id="GlobalConfigDefaults-56"><a href="#GlobalConfigDefaults-56"><span class="linenos">56</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">amount</span><span class="p">:</span>
+</span><span id="GlobalConfigDefaults-57"><a href="#GlobalConfigDefaults-57"><span class="linenos">57</span></a>            <span class="n">amount</span> <span class="o">=</span> <span class="mi">20</span>
+</span><span id="GlobalConfigDefaults-58"><a href="#GlobalConfigDefaults-58"><span class="linenos">58</span></a>
+</span><span id="GlobalConfigDefaults-59"><a href="#GlobalConfigDefaults-59"><span class="linenos">59</span></a>        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;semaphore&quot;</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">amount</span><span class="p">))</span>
 </span></pre></div>
 
 
@@ -248,6 +269,19 @@
 
 
                             </div>
+                            <div id="GlobalConfigDefaults.use_async" class="classattr">
+                                <div class="attr variable">
+            <span class="name">use_async</span><span class="annotation">: bool</span>
+
+        
+    </div>
+    <a class="headerlink" href="#GlobalConfigDefaults.use_async"></a>
+    
+            <div class="docstring"><p>Should send asynchronous download requests? If <code>True</code> it might get faster downloads, but will be incompatible with Jupyter Notebooks and some implementations of GUI applications.</p>
+</div>
+
+
+                            </div>
                             <div id="GlobalConfigDefaults.download_folder" class="classattr">
                                 <div class="attr variable">
             <span class="name">download_folder</span><span class="annotation">: str</span>
@@ -272,20 +306,20 @@
 
     </div>
     <a class="headerlink" href="#GlobalConfigDefaults.set_max_concurrent_jobs"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-37"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-37"><span class="linenos">37</span></a>    <span class="k">def</span> <span class="nf">set_max_concurrent_jobs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-38"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-38"><span class="linenos">38</span></a>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-39"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-39"><span class="linenos">39</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-40"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-40"><span class="linenos">40</span></a><span class="sd">        Defines a globally used `asyncio.Semaphore` that sets the maximum amount of concurrent downloads.</span>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-41"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-41"><span class="linenos">41</span></a><span class="sd">        </span>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-42"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-42"><span class="linenos">42</span></a><span class="sd">        ### Args:</span>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-43"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-43"><span class="linenos">43</span></a><span class="sd">        </span>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-44"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-44"><span class="linenos">44</span></a><span class="sd">        - **amount** (`int`): Maximum amount of cuncurrent downloads, defaults to `20`</span>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-45"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-45"><span class="linenos">45</span></a><span class="sd">        &quot;&quot;&quot;</span> <span class="c1"># noqa</span>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-46"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-46"><span class="linenos">46</span></a>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-47"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-47"><span class="linenos">47</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">amount</span><span class="p">:</span>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-48"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-48"><span class="linenos">48</span></a>            <span class="n">amount</span> <span class="o">=</span> <span class="mi">20</span>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-49"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-49"><span class="linenos">49</span></a>
-</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-50"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-50"><span class="linenos">50</span></a>        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;semaphore&quot;</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">amount</span><span class="p">))</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-46"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-46"><span class="linenos">46</span></a>    <span class="k">def</span> <span class="nf">set_max_concurrent_jobs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-47"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-47"><span class="linenos">47</span></a>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-48"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-48"><span class="linenos">48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-49"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-49"><span class="linenos">49</span></a><span class="sd">        Defines a globally used `asyncio.Semaphore` that sets the maximum amount of concurrent downloads.</span>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-50"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-50"><span class="linenos">50</span></a><span class="sd">        </span>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-51"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-51"><span class="linenos">51</span></a><span class="sd">        ### Args:</span>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-52"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-52"><span class="linenos">52</span></a><span class="sd">        </span>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-53"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-53"><span class="linenos">53</span></a><span class="sd">        - **amount** (`int`): Maximum amount of cuncurrent downloads, defaults to `20`</span>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-54"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-54"><span class="linenos">54</span></a><span class="sd">        &quot;&quot;&quot;</span> <span class="c1"># noqa</span>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-55"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-55"><span class="linenos">55</span></a>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-56"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-56"><span class="linenos">56</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">amount</span><span class="p">:</span>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-57"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-57"><span class="linenos">57</span></a>            <span class="n">amount</span> <span class="o">=</span> <span class="mi">20</span>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-58"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-58"><span class="linenos">58</span></a>
+</span><span id="GlobalConfigDefaults.set_max_concurrent_jobs-59"><a href="#GlobalConfigDefaults.set_max_concurrent_jobs-59"><span class="linenos">59</span></a>        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;semaphore&quot;</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">amount</span><span class="p">))</span>
 </span></pre></div>
 
 
