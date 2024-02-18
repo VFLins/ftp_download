@@ -3,6 +3,7 @@ from .prefs import Conf, set_log_configs
 import logging
 import os
 import ftplib
+import asyncio, types
 
 set_log_configs()
 log = logging.getLogger(__name__)
@@ -86,3 +87,24 @@ async def download_task(
 async def run_multiple(tasks:list) -> None:
     for task in tasks:
         await task
+
+
+def run(coro):
+    
+    """
+    Emulate asyncio.run() on older versions
+    """
+
+    # Adapted from https://stackoverflow.com/questions/55590343/asyncio-run-or-run-until-complete noqa
+
+    if not isinstance(coro, types.CoroutineType):
+        raise TypeError("run() requires a coroutine object")
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()
+        asyncio.set_event_loop(None)
+        
