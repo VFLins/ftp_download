@@ -5,7 +5,9 @@ import os
 import ftp_download
 
 
-@pytest.mark.xfail(reason="Might fail due to network issues")
+ftp_download.Conf = ftp_download.prefs.GlobalConfigDefaults()
+
+
 def test_file():
 
     ftp = FTP("cran.r-project.org")
@@ -37,7 +39,6 @@ def test_file():
     assert read == check
 
 
-@pytest.mark.xfail(reason="Might fail due to network issues")
 def test_from_folder():
     ftp = FTP("cran.r-project.org")
     ftp.login()
@@ -69,3 +70,16 @@ def test_from_folder():
     ]
     for read, check in zip(reads, checks):
         assert read == check
+
+
+ftp_download.Conf = ftp_download.prefs.GlobalConfigDefaults()
+ftp_download.Conf.use_async = True
+
+
+def test_file_async():
+    test_file()
+
+
+def test_from_folder_async():
+
+    test_from_folder()
