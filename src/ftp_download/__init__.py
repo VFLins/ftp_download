@@ -30,8 +30,11 @@ def file(
     if not path.exists(local_path):
         makedirs(local_path)
 
-    task = timings.download_task(ftp, remote_file_path, local_path)
-    Conf.loop.create_task(task)
+    if Conf.use_async:
+        task = timings.download_task(ftp, remote_file_path, local_path)
+        Conf.loop.create_task(task)
+    else:
+        timings.blocking_download_task(ftp, remote_file_path, local_path)
 
 
 def from_folder(
@@ -71,5 +74,8 @@ def from_folder(
 
         remote_file_path = ensure.posix_path(path.join(remote_path, filename))
 
-        task = timings.download_task(ftp, remote_file_path, local_path)
-        Conf.loop.create_task(task)
+        if Conf.use_async:
+            task = timings.download_task(ftp, remote_file_path, local_path)
+            Conf.loop.create_task(task)
+        else:
+            timings.blocking_download_task(ftp, remote_file_path, local_path)

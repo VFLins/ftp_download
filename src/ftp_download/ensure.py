@@ -1,9 +1,10 @@
+from .prefs import Conf
+
 import re
 import sys
-from io import StringIO
 import ftplib
+from io import StringIO
 from typing import Dict, List
-from .prefs import Conf
 from pathlib import PureWindowsPath
 
 # IMPORTANT: https://kb.globalscape.com/KnowledgebaseArticle10142.aspx

@@ -16,6 +16,9 @@ class GlobalConfigDefaults():
         self.raise_if_invalid: bool = True
         """Shoud stop if an error is encountered? If `False` it will just print a message (unused yet)""" # noqa
 
+        self.use_async: bool = False
+        """Should send asynchronous download requests? If `True` it might get faster downloads, but will be incompatible with Jupyter Notebooks and some implementations of GUI applications."""
+
         self.download_folder: str = join(
             expanduser("~"), "Downloads", "ftp_download"
         )
