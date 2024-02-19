@@ -31,7 +31,7 @@ def blocking_download_task(
 
     if Conf.verbose:
         print(f"Retrieving {filename}...")
-    log.debug(f"Trying to download {remote_file_path} from {ftp.__dict__['host']}")
+    log.debug(f"Trying to download {ftp.__dict__['host']}{remote_file_path} with blocking task")
 
     with open(local_file_path, "wb") as local_file:
 
@@ -68,7 +68,7 @@ async def download_task(
 
     if Conf.verbose:
         print(f"Retrieving {filename}...")
-    log.debug(f"Trying to download {remote_file_path} from {ftp.__dict__['host']}")
+    log.debug(f"Trying to download {ftp.__dict__['host']}{remote_file_path} with async task")
 
     with open(local_file_path, "wb") as local_file:
 
