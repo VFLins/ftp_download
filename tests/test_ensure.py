@@ -1,5 +1,9 @@
 import pytest
-from ftplib import FTP
+from ftplib import FTP, error_perm
+from ftp_download.prefs import(
+    Conf,
+    GlobalConfigDefaults
+)
 from ftp_download.ensure import (
     posix_path,
     describe_dir,
@@ -22,21 +26,37 @@ def test_posix_path(inp, out):
     assert posix_path(inp) == out
 
 
-@pytest.mark.xfail(reason="Might fail due to network issues")
-def test_describe_dir():
+@pytest.mark.parametrize(
+    "path,out", [
+        ("/", {'dirs': ['incoming', 'pub'], 'files': []}),
+        ("pub", {'dirs': ['R'], 'files': []}),
+        ("/pub/R/html", {'dirs': [], 'files': ['logo.jpg']})
+    ]
+)
+def test_describe_dir(path, out):
 
-    ftp = FTP("cdimage.debian.org")
+    ftp = FTP("cran.r-project.org")
     ftp.login()
-    path = "/"
-    desc = describe_dir(ftp=ftp, path=path)
+    assert out == describe_dir(ftp, path)
     ftp.quit()
 
-    assert len(desc["files"]) == 0
-    assert len(desc["dirs"]) == 1
+
+@pytest.mark.xfail(raises=error_perm)
+def test_describe_dir_fail():
+    Conf = GlobalConfigDefaults()
+    Conf.raise_if_invalid = True
+
+    invalid_path = "/wrongpath/"
+
+    ftp = FTP("cran.r-project.org")
+    ftp.login()
+    describe_dir(ftp, invalid_path)
+    ftp.quit()
 
 
-@pytest.mark.xfail(reason="Might fail due to network issues")
 def test_login():
+    Conf = GlobalConfigDefaults()
+
     ftp = FTP("cran.r-project.org")
     login(ftp)
     login(ftp)
