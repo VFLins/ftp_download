@@ -1,13 +1,13 @@
 import asyncio
 import logging
-from os.path import join, expanduser, exists
+from os.path import join, expanduser, exists, split
 from os import makedirs
 
 
 class GlobalConfigDefaults:
     def __init__(self):
         self.verbose: bool = True
-        """Should event messages be printed do `stdout`?"""
+        """Should event messages be printed do `stdout`? This does not affect logging""" # noqa
 
         self.timeout: int = 10
         """Time to wait for request responses in seconds (unused yet)"""
@@ -21,6 +21,8 @@ class GlobalConfigDefaults:
         self.use_async: bool = False
         """Should send asynchronous download requests? If `True` your program might run faster, due to not waiting for downloads to finish. Might be incompatible with Jupyter Notebooks and some implementations of GUI applications that runs on event loops.""" # noqa
 
+        self.set_max_concurrent_jobs()
+        
         self.download_folder: str = join(
             expanduser("~"), "Downloads", "ftp_download"
         )
@@ -68,19 +70,24 @@ class GlobalConfigDefaults:
 Conf = GlobalConfigDefaults()
 """Stores global configuration parameters, change it's parameter values to set your preferences""" # noqa
 
-LOG_PLACE = join(Conf.download_folder, "log.txt")
-makedirs(Conf.download_folder, exist_ok=True)
-if not exists(LOG_PLACE):
-    f = open(LOG_PLACE, "x")
-    f.close()
+LOG_FILE = join(Conf.download_folder, ".logs")
+"""Will log to `Conf.download_folder` in the `.logs` file by default. Change this to write the logs to another file.""" # noqa
+
 
 def set_log_configs():
+    makedirs(split(LOG_FILE)[0], exist_ok=True)
+    if not exists(LOG_FILE):
+        f = open(LOG_FILE, "x")
+        f.close()
+
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
 
     logging.basicConfig(
-        filename=LOG_PLACE,
+        filename=LOG_FILE,
         format="[%(asctime)s] - %(levelname)s::%(name)s - %(message)s",
         level=logging.DEBUG
     )
+
+
 set_log_configs()

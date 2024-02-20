@@ -1,9 +1,6 @@
 import pytest
 from ftplib import FTP, error_perm
-from ftp_download.prefs import(
-    Conf,
-    GlobalConfigDefaults
-)
+from ftp_download.prefs import Conf
 from ftp_download.ensure import (
     posix_path,
     describe_dir,
@@ -43,7 +40,7 @@ def test_describe_dir(path, out):
 
 @pytest.mark.xfail(raises=error_perm)
 def test_describe_dir_fail():
-    Conf = GlobalConfigDefaults()
+    Conf.__init__()
     Conf.raise_if_invalid = True
 
     invalid_path = "/wrongpath/"
@@ -55,7 +52,7 @@ def test_describe_dir_fail():
 
 
 def test_login():
-    Conf = GlobalConfigDefaults()
+    Conf.__init__()
 
     ftp = FTP("cran.r-project.org")
     login(ftp)

@@ -4,7 +4,6 @@ from .prefs import Conf
 
 from os import path, makedirs
 import asyncio
-import logging
 import ftplib  # https://github.com/python/cpython/blob/3.12/Lib/ftplib.py
 from typing import Optional
 
@@ -75,7 +74,7 @@ def from_folder(
 
     tasks = []
     for idx, filename in enumerate(filenames):
-  
+
         if stops_with == idx:
             break
 
@@ -86,11 +85,10 @@ def from_folder(
             tasks.append(task)
         else:
             timings.blocking_download_task(ftp, remote_file_path, local_path)
-    
+
     if Conf.use_async:
         try:
             loop = asyncio.get_running_loop()
             loop.create_task(timings.run_multiple(tasks))
         except RuntimeError:
             timings.run(timings.run_multiple(tasks))
-      

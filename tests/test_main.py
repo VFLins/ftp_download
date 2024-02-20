@@ -1,4 +1,3 @@
-import pytest
 from ftplib import FTP
 import hashlib
 import os
