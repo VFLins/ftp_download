@@ -71,7 +71,13 @@ Conf = GlobalConfigDefaults()
 """Stores global configuration parameters, change it's parameter values to set your preferences""" # noqa
 
 LOG_FILE = join(Conf.download_folder, ".logs")
-"""Will log to `Conf.download_folder` in the `.logs` file by default. Change this to write the logs to another file.""" # noqa
+"""Full path to the logfile"""
+
+LOG_FMT = "[%(asctime)s] - %(levelname)s::%(name)s - %(message)s"
+"""Format string used by the logger"""
+
+LOG_LVL = logging.DEBUG
+"""`int` specifying the log level for the `logging` library"""
 
 
 def set_log_configs():
@@ -84,9 +90,9 @@ def set_log_configs():
         logging.root.removeHandler(handler)
 
     logging.basicConfig(
-        filename=LOG_FILE,
-        format="[%(asctime)s] - %(levelname)s::%(name)s - %(message)s",
-        level=logging.DEBUG
+        format=LOG_FMT,
+        level=LOG_LVL,
+        handlers=[logging.FileHandler(filename=LOG_FILE)]
     )
 
 
