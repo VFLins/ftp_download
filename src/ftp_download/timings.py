@@ -1,13 +1,12 @@
-from .prefs import Conf, set_log_configs
+from .prefs import Conf, LocalLogger
 
-import logging
 import os
 import ftplib
 import asyncio
 import types
 
-set_log_configs()
-log = logging.getLogger(__name__)
+
+log = LocalLogger()
 
 
 def blocking_download_task(

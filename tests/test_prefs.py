@@ -2,8 +2,7 @@ import pytest
 from os.path import normpath, expanduser, sep
 import logging
 from ftp_download.prefs import (
-    Conf,
-    set_log_configs,
+    LocalLogger,
     LOG_FILE,
     LOG_FMT,
     LOG_LVL
@@ -24,12 +23,14 @@ def test_set_max_concurrent_jobs(amount, out):
  """
 
 
-""" def test_set_log_configs():
-    set_log_configs()
-    log = logging.getLogger(__name__)
-    
-    logging.RootLogger.ha
+def test_local_logger():
+    log = LocalLogger()
 
-    assert log.getEffectiveLevel() == LOG_LVL
-    assert log.hasHandlers() == True
-"""
+    assert len(log.logger.handlers) >= 1
+    assert type(log.handler) == logging.FileHandler
+
+    assert log.handler.__dict__['baseFilename'] == LOG_FILE
+    assert log.handler.level == LOG_LVL
+    assert log.handler.formatter._fmt == LOG_FMT
+
+    assert log.logger.getEffectiveLevel() == LOG_LVL

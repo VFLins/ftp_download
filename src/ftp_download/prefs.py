@@ -22,7 +22,7 @@ class GlobalConfigDefaults:
         """Should send asynchronous download requests? If `True` your program might run faster, due to not waiting for downloads to finish. Might be incompatible with Jupyter Notebooks and some implementations of GUI applications that runs on event loops.""" # noqa
 
         self.set_max_concurrent_jobs()
-        
+
         self.download_folder: str = join(
             expanduser("~"), "Downloads", "ftp_download"
         )
@@ -80,7 +80,41 @@ LOG_LVL = logging.DEBUG
 """`int` specifying the log level for the `logging` library"""
 
 
+class LocalLogger():
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.DEBUG)
+        self.handler = logging.FileHandler(
+            filename=LOG_FILE
+        )
+        self.formatter = logging.Formatter(
+            fmt=LOG_FMT
+        )
+
+        self.handler.setFormatter(self.formatter)
+        self.handler.setLevel(logging.DEBUG)
+        self.logger.addHandler(self.handler)
+        self.logger.propagate = False
+
+    def debug(self, message):
+        self.logger.debug(msg=message)
+
+    def info(self, message):
+        self.logger.info(msg=message)
+
+    def warn(self, message):
+        self.logger.warn(msg=message)
+
+    def error(self, message):
+        self.logger.error(msg=message)
+
+    def critical(self, message):
+        self.logger.critical(msg=message)
+
+
 def set_log_configs():
+    global log
+
     makedirs(split(LOG_FILE)[0], exist_ok=True)
     if not exists(LOG_FILE):
         f = open(LOG_FILE, "x")
@@ -94,6 +128,9 @@ def set_log_configs():
         level=LOG_LVL,
         handlers=[logging.FileHandler(filename=LOG_FILE)]
     )
+
+    log = logging.getLogger()
+    log.propagate = False
 
 
 set_log_configs()
