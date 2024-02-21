@@ -1,5 +1,3 @@
-import pytest
-from os.path import normpath, expanduser, sep
 import logging
 from ftp_download.prefs import (
     LocalLogger,
@@ -27,7 +25,7 @@ def test_local_logger():
     log = LocalLogger()
 
     assert len(log.logger.handlers) >= 1
-    assert type(log.handler) == logging.FileHandler
+    assert type(log.handler) is logging.FileHandler
 
     assert log.handler.__dict__['baseFilename'] == LOG_FILE
     assert log.handler.level == LOG_LVL
