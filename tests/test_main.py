@@ -8,7 +8,6 @@ ftp_download.Conf = ftp_download.prefs.GlobalConfigDefaults()
 
 
 def test_file():
-
     ftp = FTP("cran.r-project.org")
     ftp.login()
 
@@ -71,14 +70,13 @@ def test_from_folder():
         assert read == check
 
 
-ftp_download.Conf = ftp_download.prefs.GlobalConfigDefaults()
-ftp_download.Conf.use_async = True
-
-
 def test_file_async():
+    ftp_download.Conf.__init__()
+    ftp_download.Conf.use_async = True
     test_file()
 
 
 def test_from_folder_async():
-
+    ftp_download.Conf.__init__()
+    ftp_download.Conf.use_async = True
     test_from_folder()
