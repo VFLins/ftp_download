@@ -21,8 +21,6 @@ class GlobalConfigDefaults:
         self.use_async: bool = False
         """Should send asynchronous download requests? If `True` your program might run faster, due to not waiting for downloads to finish. Might be incompatible with Jupyter Notebooks and some implementations of GUI applications that runs on event loops.""" # noqa
 
-        self.set_max_concurrent_jobs()
-
         self.download_folder: str = join(
             expanduser("~"), "Downloads", "ftp_download"
         )
@@ -52,19 +50,6 @@ class GlobalConfigDefaults:
             amount = 20
 
         setattr(self, "semaphore", asyncio.Semaphore(amount))
-
-    def reset_event_loop(self) -> None:
-
-        """
-        Replaces the current event loop if it is closed
-        """
-        if self.loop.is_closed():
-            self.loop = asyncio.new_event_loop()
-        else:
-            try:
-                self.loop = asyncio.get_running_loop()
-            except RuntimeError:
-                self.loop = asyncio.new_event_loop()
 
 
 Conf = GlobalConfigDefaults()
