@@ -32,24 +32,8 @@ class GlobalConfigDefaults:
             f"verbose = {self.verbose}; \n" +
             f"raise_if_invalid = {self.raise_if_invalid};  \n" +
             f"use_async = {self.use_async}; \n" +
-            f"max_concurrent_jobs = {self.semaphore._value}; \n" +
             f"download_folder = {self.download_folder}"
         )
-
-    def set_max_concurrent_jobs(self, amount: int = 20) -> None:
-
-        """
-        Defines a globally used `asyncio.Semaphore` that sets the maximum amount of concurrent downloads.
-        
-        ### Args:
-        
-        - **amount** (`int`): Maximum amount of cuncurrent downloads, defaults to `20`
-        """ # noqa
-
-        if not amount:
-            amount = 20
-
-        setattr(self, "semaphore", asyncio.Semaphore(amount))
 
 
 Conf = GlobalConfigDefaults()
