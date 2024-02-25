@@ -1,7 +1,5 @@
-import asyncio
 import logging
-from os.path import join, expanduser, exists, split
-from os import makedirs
+from os.path import join, expanduser
 
 
 class GlobalConfigDefaults:
@@ -52,13 +50,12 @@ LOG_LVL = logging.DEBUG
 class LocalLogger():
     def __init__(self):
         self.logger = logging.getLogger(__name__)
+        """Create a logger with the current module level."""
         self.logger.setLevel(logging.DEBUG)
-        self.handler = logging.FileHandler(
-            filename=LOG_FILE
-        )
-        self.formatter = logging.Formatter(
-            fmt=LOG_FMT
-        )
+        self.handler = logging.FileHandler(filename=LOG_FILE)
+        """Setup the log handler to use the default logging place `LOG_FILE`""" # noqa
+        self.formatter = logging.Formatter(fmt=LOG_FMT)
+        """Format log messages with the default `LOG_FMT`"""
 
         self.handler.setFormatter(self.formatter)
         self.handler.setLevel(logging.DEBUG)
@@ -66,40 +63,21 @@ class LocalLogger():
         self.logger.propagate = False
 
     def debug(self, message):
+        """Log a debug level message"""
         self.logger.debug(msg=message)
 
     def info(self, message):
+        """Log a info level message"""
         self.logger.info(msg=message)
 
     def warn(self, message):
+        """Log a warning level message"""
         self.logger.warn(msg=message)
 
     def error(self, message):
+        """Log a error level message"""
         self.logger.error(msg=message)
 
     def critical(self, message):
+        """Log a critical level message"""
         self.logger.critical(msg=message)
-
-
-def set_log_configs():
-    global log
-
-    makedirs(split(LOG_FILE)[0], exist_ok=True)
-    if not exists(LOG_FILE):
-        f = open(LOG_FILE, "x")
-        f.close()
-
-    for handler in logging.root.handlers[:]:
-        logging.root.removeHandler(handler)
-
-    logging.basicConfig(
-        format=LOG_FMT,
-        level=LOG_LVL,
-        handlers=[logging.FileHandler(filename=LOG_FILE)]
-    )
-
-    log = logging.getLogger()
-    log.propagate = False
-
-
-set_log_configs()
