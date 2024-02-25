@@ -1,5 +1,6 @@
 import logging
 from os.path import join, expanduser
+from os import makedirs
 
 
 class GlobalConfigDefaults:
@@ -52,6 +53,8 @@ class LocalLogger():
         self.logger = logging.getLogger(__name__)
         """Create a logger with the current module level."""
         self.logger.setLevel(logging.DEBUG)
+
+        makedirs(LOG_FILE, exist_ok=True)
         self.handler = logging.FileHandler(filename=LOG_FILE)
         """Setup the log handler to use the default logging place `LOG_FILE`""" # noqa
         self.formatter = logging.Formatter(fmt=LOG_FMT)
