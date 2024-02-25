@@ -1,4 +1,4 @@
-![Project banner](docs/gh_banner.png)
+![Project banner](https://raw.githubusercontent.com/VFLins/ftp_download/v0.1.1/docs/gh_banner.png)
 
 Easily download files from ftp servers!
 
