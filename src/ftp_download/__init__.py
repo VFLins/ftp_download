@@ -54,7 +54,7 @@ def from_folder(
     - **ftp** (`ftplib.FTP`): An instance of the FTP class;
     - **remote_path** (`str`): Remote path on FTP server to desired files;
     - **local_path** (`str`): Local path where files should be dumped;
-    - **stops_with** (`int` or `None`): If not `None`, defines the maximum amount of files to be downloaded, otherwise download every file in `remote_path`. Defaults to `None`.
+    - **stops_with** (`int` or `None`): If `int`, defines the maximum amount of files to be downloaded, otherwise download every file in `remote_path`. Defaults to `None`.
     """ # noqa
 
     ensure.login(ftp=ftp)
