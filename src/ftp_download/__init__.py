@@ -88,7 +88,8 @@ def from_folder(
 
     if Conf.use_async:
         try:
-            loop = asyncio.get_running_loop()
+            loop = asyncio.get_event_loop()
             loop.create_task(timings.run_multiple(tasks))
+
         except RuntimeError:
             timings.run(timings.run_multiple(tasks))
