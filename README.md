@@ -85,8 +85,8 @@ ftpd.Conf.verbose = False
 # To change the standard download path (default: {user_folder}/Downloads/ftp_download)
 ftpd.Conf.download_folder = "C:\\my\\custom\\path"
 
-# To change the maximum amount of concurrent downloads (default: 20)
-ftpd.Conf.set_max_concurrent_jobs(300)
+# To send download requests asynchronously
+ftpd.Conf.use_async = True
 ```
 
 For more information, read the [documentation](https://vflins.github.io/ftp_download/docs/ftp_download/prefs.html).
