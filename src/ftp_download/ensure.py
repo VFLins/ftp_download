@@ -1,13 +1,17 @@
-from .prefs import Conf
+from .prefs import Conf, LocalLogger
 
 import re
 import sys
 import ftplib
+import hashlib
 from io import StringIO
 from typing import Dict, List
 from pathlib import PureWindowsPath
 
 # IMPORTANT: https://kb.globalscape.com/KnowledgebaseArticle10142.aspx
+
+
+log = LocalLogger()
 
 
 def posix_path(path: str) -> str:
@@ -93,3 +97,51 @@ def login(ftp: ftplib.FTP) -> None:
 
         if resp[:3] != "530":
             raise ftplib.error_perm(resp)
+
+
+def check_file(
+        local_file_path: str, 
+        hash_value: str,
+        hash_type: str = "sha256"
+        ) -> bool:
+    """
+    Check if the hash of the local file matches the provided hash value.
+
+    ### Args:
+
+    - local_file_path (`str`): Path to the local file.
+    - hash_value (`str`): The expected hash value.
+    - hash_type (`str`, optional): The hash algorithm (default is "sha256"), must be one of ["sha256", "sha512", "md5"].
+
+    ### Returns:
+
+    `bool`: True if the hash matches, False otherwise.
+    or
+    Raise 
+    """ # noqa
+
+    valid_hash_types = ("sha256", "sha512", "md5")
+
+    if hash_type not in valid_hash_types:
+        if Conf.raise_if_invalid:
+            raise ValueError(f"Invalid hash_type for {local_file_path}. Must be one of {valid_hash_types}")
+
+        else:
+            log.critical(f"Invalid hash_type input for {local_file_path}, defaulting to 'sha256'")        
+
+    if hash_type == "md5":
+        file_hash = hashlib.md5()
+    elif hash_type == "sha512":
+        file_hash = hashlib.sha512()
+    else:
+        file_hash = hashlib.sha256()
+
+    with open(local_file_path, "rb") as f:
+        chunk = f.read()
+        while chunk:
+            file_hash.update(chunk)
+            chunk = f.read()
+
+    hash_read = file_hash.hexdigest()
+
+    return hash_read == hash_value
