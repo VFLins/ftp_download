@@ -20,7 +20,7 @@ pip install ftp_download
 
 Here, everything starts with creating an `ftplib.FTP` object:
 
-```
+```python
 from ftplib import FTP
 
 ftp = FTP(
@@ -37,7 +37,7 @@ Then you can start downloading. **Here are some examples:**
 
 For the examples here we will go with:
 
-```
+```python
 import ftp_download as ftpd
 from ftplib import FTP
 import os
@@ -47,7 +47,7 @@ ftp = FTP("cran.r-project.org")
 
 To download a file we can do this:
 
-```
+```python
 # downloading /pub/R/CRANlogo.png 
 # from cran.r-project.org
 
@@ -63,7 +63,7 @@ Notice that `local_path` was specified, but if not, `ftp_download` will save the
 
 You can also give a path to a folder and download everything from there, notice that this is not recursive, and will get only the files at the top level of `remote_path`.
 
-```
+```python
 rp = "/pub/R/web"
 lp = os.path.expanduser("~") # Download to user folder
 
@@ -76,7 +76,7 @@ It's also important to notice that currently, `ftp_download` will not create a "
 
 `ftp_download` will have a standard behavior that can be tweaked by changing the default values of `ftp_download.Conf`:
 
-```
+```python
 import ftp_download as ftpd
 
 # To stop printing event messages to stdout (default: True)
